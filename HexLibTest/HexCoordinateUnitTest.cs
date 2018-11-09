@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using HexLib;
+using System.Linq;
 
 namespace HexLibTest
 {
@@ -15,8 +16,17 @@ namespace HexLibTest
 		{
 			Assert.ThrowsException<ArgumentException>(() => { new HexCoordinate(-1, 0); });
 			Assert.ThrowsException<ArgumentException>(() => { new HexCoordinate(-3, 0); });
-
 		}
+
+		[TestMethod]
+		public void ShouldCompareEquality()
+		{
+			Assert.AreEqual(true, new HexCoordinate(0, 0).Equals(new HexCoordinate(0, 5)));
+			Assert.AreEqual(true, new HexCoordinate(1, 0).Equals(new HexCoordinate(1, 6)));
+			Assert.AreEqual(true, new HexCoordinate(1, 5).Equals(new HexCoordinate(1, -1)));
+			Assert.AreEqual(false, new HexCoordinate(1, 0).Equals(new HexCoordinate(2, 0)));
+		}
+
 
 		[TestMethod]
 		public void ShouldModuloRingIndex()
@@ -32,6 +42,7 @@ namespace HexLibTest
 			Assert.AreEqual(3, new HexCoordinate(1, -3).RingIndex);
 			Assert.AreEqual(2, new HexCoordinate(1, -4).RingIndex);
 			Assert.AreEqual(1, new HexCoordinate(1, -5).RingIndex);
+			Assert.AreEqual(0, new HexCoordinate(1, -6).RingIndex);
 
 			// radius = 2
 			for (int t = 0; t < 12; t++) Assert.AreEqual(t, new HexCoordinate(2, t).RingIndex);
@@ -56,6 +67,14 @@ namespace HexLibTest
 			Assert.AreEqual(5, new HexCoordinate(1, 4).Index);
 			Assert.AreEqual(6, new HexCoordinate(1, 5).Index);
 			Assert.AreEqual(1, new HexCoordinate(1, 6).Index);
+
+
+			Assert.AreEqual(6, new HexCoordinate(1, -1).Index);
+			Assert.AreEqual(5, new HexCoordinate(1, -2).Index);
+			Assert.AreEqual(4, new HexCoordinate(1, -3).Index);
+			Assert.AreEqual(3, new HexCoordinate(1, -4).Index);
+			Assert.AreEqual(2, new HexCoordinate(1, -5).Index);
+			Assert.AreEqual(1, new HexCoordinate(1, -6).Index);
 
 			Assert.AreEqual(7, new HexCoordinate(2, 0).Index);
 			Assert.AreEqual(8, new HexCoordinate(2, 1).Index);
@@ -110,6 +129,34 @@ namespace HexLibTest
 
 		}
 
+		[TestMethod]
+		public void ShouldHaveCorrectIsAxisAligned()
+		{
+			Assert.AreEqual(true, new HexCoordinate(0, 4).IsAxisAligned);
+			for (int t = 0; t < 6; t++)
+			{
+				Assert.AreEqual(true, new HexCoordinate(1, t).IsAxisAligned);
+			}
+
+			Assert.AreEqual(true, new HexCoordinate(2, 0).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 1).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(2, 2).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 3).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(2, 4).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 5).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(2, 6).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 7).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(2, 8).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 9).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(2, 10).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(2, 11).IsAxisAligned);
+
+			Assert.AreEqual(true, new HexCoordinate(3, 3).IsAxisAligned);
+			Assert.AreEqual(true, new HexCoordinate(3, 6).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(3, 5).IsAxisAligned);
+			Assert.AreEqual(false, new HexCoordinate(3, 7).IsAxisAligned);
+		}
+
 
 		[TestMethod]
 		public void ShouldRotateTransform()
@@ -137,10 +184,41 @@ namespace HexLibTest
 			coord = new HexCoordinate(2, 0).JumpTransform(-2); Assert.AreEqual(0, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
 
 			coord = new HexCoordinate(2, 1).JumpTransform(1); Assert.AreEqual(3, coord.Radius); Assert.AreEqual(1, coord.RingIndex);
-			coord = new HexCoordinate(2, 1).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(2, coord.RingIndex);
-
+			coord = new HexCoordinate(2, 1).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(1, coord.RingIndex);
 
 		}
+
+		[TestMethod]
+		public void ShouldReturnNeighbours()
+		{
+			HexCoordinate[] ng;
+
+			// Radius = 0
+			ng = new HexCoordinate(0, 0).GetNeighbours().ToArray();
+			Assert.AreEqual(6, ng.Length);
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 0)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 1)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 2)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 3)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 5)));
+
+			// Axis Aligned cell
+			ng = new HexCoordinate(2, 8).GetNeighbours().ToArray();
+			Assert.AreEqual(6, ng.Length);
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 7)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 9)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 12)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 11)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 13)));//*/
+
+
+			// Not aligned cell
+			tofoo
+		}
+
+
 
 	}
 }

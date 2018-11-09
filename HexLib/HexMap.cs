@@ -28,33 +28,10 @@ namespace HexLib
 			if (Radius < 0) throw (new ArgumentException("Radius"));
 			return Radius * (Radius + 1) / 2 * 6 + 1;
 		}
-		/*public static int GetIndex(int Radius)
-		{
-			if (Radius < 0) throw (new ArgumentException("Radius"));
-			if (Radius == 0) return 0;
-			return Radius * (Radius - 1) / 2 * 6 + 1;
-		}*/
+		
 
 
-		public static IEnumerable<HexCoordinate> GetNeighborCoordinates(HexCoordinate Coordinate)
-		{
-
-			if (Coordinate.Radius == 0)
-			{
-				yield return new HexCoordinate(1, 0);
-				yield return new HexCoordinate(1, 1);
-				yield return new HexCoordinate(1, 2);
-				yield return new HexCoordinate(1, 3);
-				yield return new HexCoordinate(1, 4);
-				yield return new HexCoordinate(1, 5);
-				yield break;
-			}
-
-			//yield return new HexCoordinate(Radius, RingIndex-1);
-			//yield return new HexCoordinate(Radius, RingIndex + 1);
-			//yield return new HexCoordinate(Radius-1, RingIndex + 1);
-
-		}
+		
 
 		#region drawing coordinate transformation
 		/*public static Point GetPosition(HexCoordinate Coordinate, double HexRadius)
