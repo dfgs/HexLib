@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace HexLib
 {
@@ -11,7 +13,7 @@ namespace HexLib
 	{
 		protected HexMap()
 		{
-
+			
 		}
 
 		
@@ -21,69 +23,63 @@ namespace HexLib
 			if (Radius == 0) return 1;
 			return 6 * Radius;
 		}
-
-		public static int GetModuloRingIndex(int Radius, int RingIndex)
+		public static int GetCount(int Radius)
 		{
 			if (Radius < 0) throw (new ArgumentException("Radius"));
-			if (Radius == 0) return 0;
-			if (RingIndex < 0) return GetPerimeter(Radius) + RingIndex % GetPerimeter(Radius);
-			return RingIndex % GetPerimeter(Radius);
+			return Radius * (Radius + 1) / 2 * 6 + 1;
 		}
-
-		public static int GetIndex(int Radius, int RingIndex)
-		{
-			if (Radius < 0) throw (new ArgumentException("Radius"));
-			return GetIndex(Radius) + GetModuloRingIndex(Radius, RingIndex);
-		}
-
-		public static int GetIndex(int Radius)
+		/*public static int GetIndex(int Radius)
 		{
 			if (Radius < 0) throw (new ArgumentException("Radius"));
 			if (Radius == 0) return 0;
 			return Radius * (Radius - 1) / 2 * 6 + 1;
-		}
+		}*/
 
-		/*
-		 * 
-		 * 
-		protected static int GetItemOffset(int Radius, int Index)
+
+		public static IEnumerable<HexCoordinate> GetNeighborCoordinates(HexCoordinate Coordinate)
 		{
-			return GetItemOffset(Radius) + GetModIndex(Radius, Index);
+
+			if (Coordinate.Radius == 0)
+			{
+				yield return new HexCoordinate(1, 0);
+				yield return new HexCoordinate(1, 1);
+				yield return new HexCoordinate(1, 2);
+				yield return new HexCoordinate(1, 3);
+				yield return new HexCoordinate(1, 4);
+				yield return new HexCoordinate(1, 5);
+				yield break;
+			}
+
+			//yield return new HexCoordinate(Radius, RingIndex-1);
+			//yield return new HexCoordinate(Radius, RingIndex + 1);
+			//yield return new HexCoordinate(Radius-1, RingIndex + 1);
+
 		}
 
-		public static int GetModIndex(int Radius, int Index)
-		{
-			if (Radius < 0) throw (new ArgumentException("Radius must be greater or equal to zero"));
-			if (Radius == 0) return 0;
-			if (Index < 0) return GetPerimeter(Radius) + Index % GetPerimeter(Radius);
-			return Index % GetPerimeter(Radius);
-		}
-
-		public static Point GetPosition(double HexRadius, int Radius, int Index)
+		#region drawing coordinate transformation
+		/*public static Point GetPosition(HexCoordinate Coordinate, double HexRadius)
 		{
 			double x, y;
 			double angle;
 			int mod;
-			int branch;
+			int directionIndex;
 			double horDist;
 			double vertDist;
 
-			int index;
 
-			if (Radius == 0) return new Point(0, 0);
+			if (Coordinate.Radius == 0) return new Point(0, 0);
 
 			vertDist = HexRadius * 3.0f / 4.0f;
 			horDist = HexRadius * Math.Sqrt(3);
 
-			index = GetModIndex(Radius, Index);
 
-			mod = index % Radius;
-			branch = index / Radius;
+			mod = RingIndex % Radius; // was modulo ring index
+			directionIndex = GetDirectionIndex(Radius, RingIndex);
 
-			angle = 2 * Math.PI * branch / 6.0f;
+			angle = 2 * Math.PI * directionIndex / 6.0f;
 
 			x = 0; y = 0;
-			switch (branch)
+			switch (directionIndex)
 			{
 				case 0:
 					x = Radius * Math.Cos(angle) * horDist - 0.5f * mod * horDist;
@@ -114,8 +110,7 @@ namespace HexLib
 			return new Point(x, y);
 		}
 
-
-		public static Point GetCorner(Point Position, double HexRadius, int Corner, double Margin = 0)
+		public static Point GetHexCorner(Point Position, double HexRadius, int Corner, double Margin = 0)
 		{
 			double angle_deg = 60 * Corner + 30;
 			double angle_rad = Math.PI * angle_deg / 180;
@@ -123,7 +118,7 @@ namespace HexLib
 			return new Point(Position.X + (HexRadius - Margin) * Math.Cos(angle_rad), Position.Y + (HexRadius - Margin) * Math.Sin(angle_rad));
 		}
 
-		public static PointCollection GetCorners(Point Position, double HexRadius, double Margin = 0)
+		public static PointCollection GetHexCorners(Point Position, double HexRadius, double Margin = 0)
 		{
 			double angle_deg;
 			double angle_rad;
@@ -137,67 +132,29 @@ namespace HexLib
 				points.Add(new Point(Position.X + (HexRadius - Margin) * Math.Cos(angle_rad), Position.Y + (HexRadius - Margin) * Math.Sin(angle_rad)));
 			}
 			return points;
-		}
+		}*/
 
-		public IEnumerable<NeighborCoordinate> GetNeighborCoordinates(int Radius, int Index)
-		{
-			int index;
-			int mod;
-			int currentBranch;
-			//int previousBranch;
+		#endregion
 
 
-			if (Radius == 0)
-			{
-				if (this.Radius > 0)
-				{
-					yield return new NeighborCoordinate(1, 0, 0, 3);
-					yield return new NeighborCoordinate(1, 1, 1, 3);
-					yield return new NeighborCoordinate(1, 2, 2, 3);
-					yield return new NeighborCoordinate(1, 3, 3, 3);
-					yield return new NeighborCoordinate(1, 4, 4, 3);
-					yield return new NeighborCoordinate(1, 5, 5, 3);
-				}
-				yield break;
-			}
-
-			index = GetModIndex(Radius, Index);
-
-			mod = index % Radius;
-			currentBranch = index / Radius;
 
 
-			yield return new NeighborCoordinate(Radius, Index + 1, 2 + currentBranch, 3); //2+branch
-			yield return new NeighborCoordinate(Radius, Index - 1, mod == 0 ? 4 + currentBranch : 5 + currentBranch, 3);
-
-			yield return new NeighborCoordinate(Radius - 1, Index - currentBranch, 3 + currentBranch, 3);//3+branch
-			if (mod != 0) yield return new NeighborCoordinate(Radius - 1, Index - currentBranch - 1, 4 + currentBranch, 3);
 
 
-			if (Radius < this.Radius)
-			{
-				yield return new NeighborCoordinate(Radius + 1, Index + currentBranch, 0 + currentBranch, 3);//0+branch
-				yield return new NeighborCoordinate(Radius + 1, Index + currentBranch + 1, 1 + currentBranch, 3); //1+branch
-				if (mod == 0) yield return new NeighborCoordinate(Radius + 1, Index + currentBranch - 1, 5 + currentBranch, 3); // 5+branch
-			}
-
-			yield break;
-		}
-		//*/
 
 	}
 	public class HexMap<T> : HexMap,IHexMap<T>
 	{
 		private T[] items;
-		public T this[int Radius, int RingIndex]
+		public T this[HexCoordinate Coordinate]
 		{
 			get
 			{
-				return items[GetIndex(Radius, RingIndex)];
+				return items[Coordinate.Index];
 			}
 			set
 			{
-				items[GetIndex(Radius, RingIndex)] = value;
+				items[Coordinate.Index] = value;
 			}
 		}
 		public T this[int Index]
@@ -228,7 +185,7 @@ namespace HexLib
 		{
 			if (Radius < 0) throw (new ArgumentException("Radius"));
 			this.Radius = Radius;
-			Count = Radius * (Radius + 1) / 2 * 6 + 1;
+			Count = HexMap.GetCount(Radius);
 			items = new T[Count];
 		}
 
@@ -242,11 +199,7 @@ namespace HexLib
 			foreach (T item in items) yield return item;
 		}
 
-		/*public IEnumerable<T> GetNeighbors(int Radius, int Index)
-		{
-			foreach (NeighborCoordinate coord in GetNeighborCoordinates(Radius, Index)) yield return this[coord.Radius, coord.Index];
-		}*/
-
+	
 		
 	}
 

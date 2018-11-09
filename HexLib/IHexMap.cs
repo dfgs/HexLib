@@ -23,7 +23,7 @@ namespace HexLib
 
 	public interface IHexMap<T>:IEnumerable<T>,IHexMap
 	{
-		T this[int Radius, int RingIndex]
+		T this[HexCoordinate Coordinate]
 		{
 			get;
 			set;
