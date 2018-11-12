@@ -10,7 +10,7 @@ namespace Demo
 		public static DemoModes[] DemoModes = Enum.GetValues(typeof(DemoModes)).Cast<DemoModes>().ToArray();
 
 
-		public static readonly double HexRadius;
+		public static readonly double HexRadius=32;
 
 
 		public static readonly DependencyProperty DemoModeProperty = DependencyProperty.Register("DemoMode", typeof(DemoModes), typeof(AppViewModel),new PropertyMetadata(Demo.DemoModes.Coordinates,DemoModePropertyChanged));
@@ -54,26 +54,36 @@ namespace Demo
 		protected void OnDemoModeChanged()
 		{
 			if (HexMap == null) return;
-			foreach(HexViewModel hex in HexMap)
-			{
-				OnUpdateHexContent(hex);
-			}
-		}
-		protected void OnUpdateHexContent(HexViewModel Hex)
-		{
-			switch(DemoMode)
+
+			switch (DemoMode)
 			{
 				case Demo.DemoModes.Coordinates:
-					Hex.Content = Hex.Coordinate;
+					OnUpdateHexContentWithCoordinates();
 					break;
 				case Demo.DemoModes.Neighbours:
+					OnClearHexContent();
 					break;
 				default:
-					Hex.Content = null;
+					OnClearHexContent();
 					break;
 			}
-		}
 
+			
+		}
+		protected void OnUpdateHexContentWithCoordinates()
+		{
+			foreach (HexViewModel hex in HexMap)
+			{
+				hex.Content = hex.Coordinate;
+			}
+		}
+		protected void OnClearHexContent()
+		{
+			foreach (HexViewModel hex in HexMap)
+			{
+				hex.Content = null;
+			}
+		}
 
 
 	}

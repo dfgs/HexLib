@@ -199,6 +199,11 @@ namespace HexLib
 			return points;
 		}
 
+		public override string ToString()
+		{
+			return $"[{Radius},{Index}]";
+		}
+
 
 
 	}

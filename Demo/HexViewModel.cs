@@ -42,5 +42,6 @@ namespace Demo
 			this.Points = Coordinate.GetHexCorners(new Point(HexRadius,HexRadius), HexRadius);
 		}
 
+
 	}
 }

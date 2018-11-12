@@ -4,12 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo"
+		xmlns:hexLib="clr-namespace:HexLib;assembly=HexLib"
         mc:Ignorable="d"
         Title="Demo" Height="800" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
 	<Window.Resources>
 		<local:AppViewModel x:Key="appViewModel"/>
-		<DataTemplate DataType="{x:Type local:HexViewModel}">
-			<TextBlock Text="{Binding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+		<DataTemplate DataType="{x:Type hexLib:HexCoordinate}">
+			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+				<TextBlock Text="{Binding Radius}"/>
+				<TextBlock Text=","/>
+				<TextBlock Text="{Binding Index}"/>
+			</StackPanel>
 		</DataTemplate>
 	</Window.Resources>
 	
@@ -35,7 +40,7 @@
 							<ControlTemplate TargetType="{x:Type ListBoxItem}">
 								<Grid>
 									<Polygon Points="{Binding Points}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}"/>
-									<ContentPresenter Content="{Binding}"/>
+									<ContentPresenter Content="{Binding Content}"/>
 								</Grid>
 							</ControlTemplate>
 						</Setter.Value>
@@ -50,7 +55,7 @@
 			</ListBox.ItemContainerStyle>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
-					<local:HexMapPanel HexRadius="{Binding HexSize}"/>
+					<local:HexMapPanel HexRadius="{x:Static local:AppViewModel.HexRadius}"/>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 			

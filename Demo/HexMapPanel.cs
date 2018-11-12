@@ -39,7 +39,6 @@ namespace Demo
 			HexCoordinate coordinate;
 			Size itemSize;
 			int maxRadius;
-			double size;
 
 			maxRadius = 0;
 			itemSize = new Size(HexRadius*2, HexRadius*2);
@@ -50,8 +49,8 @@ namespace Demo
 				element.Measure(itemSize);
 			}
 
-			size = HexRadius * maxRadius*5;
-			return new Size(size,size) ;
+			
+			return new Size(2*(maxRadius+1)* HexRadius* Math.Sqrt(3), (2*maxRadius)*2*HexRadius) ;
 		}
 
 		protected override Size ArrangeOverride(Size finalSize)
@@ -63,8 +62,8 @@ namespace Demo
 			double dx, dy;
 
 			itemSize = new Size(HexRadius*2, HexRadius*2);
-			dx = DesiredSize.Width / 2.0d;
-			dy = DesiredSize.Height / 2.0d;
+			dx = DesiredSize.Width / 2.0d-HexRadius;
+			dy = DesiredSize.Height / 2.0d-HexRadius;
 
 			foreach (UIElement element in Children)
 			{
