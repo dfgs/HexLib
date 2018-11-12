@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexLib", "HexLib\HexLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexLibTest", "HexLibTest\HexLibTest.csproj", "{92912369-1D85-41CC-8CC6-D36EADBFECD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{165D76D9-DA85-44AF-95E8-AEE1425565FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{92912369-1D85-41CC-8CC6-D36EADBFECD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92912369-1D85-41CC-8CC6-D36EADBFECD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92912369-1D85-41CC-8CC6-D36EADBFECD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{165D76D9-DA85-44AF-95E8-AEE1425565FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{165D76D9-DA85-44AF-95E8-AEE1425565FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{165D76D9-DA85-44AF-95E8-AEE1425565FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{165D76D9-DA85-44AF-95E8-AEE1425565FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace HexLib
 {
@@ -124,6 +126,80 @@ namespace HexLib
 			}
 		}
 
-		
+		public Point ToScreenCoordinate(double HexRadius)
+		{
+			double x, y;
+			double angle;
+			int mod;
+			double horDist;
+			double vertDist;
+
+
+			if (Radius == 0) return new Point(0, 0);
+
+			vertDist = HexRadius * 3.0f / 4.0f;
+			horDist = HexRadius * Math.Sqrt(3);
+
+			mod = RingIndex % Radius; // was modulo ring index
+			angle = 2 * Math.PI * DirectionIndex / 6.0f;
+
+			x = 0; y = 0;
+			switch (DirectionIndex)
+			{
+				case 0:
+					x = Radius * Math.Cos(angle) * horDist - 0.5f * mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist + 2 * mod * vertDist;
+					break;
+				case 1:
+					x = Radius * Math.Cos(angle) * horDist - mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist;
+					break;
+				case 2:
+					x = Radius * Math.Cos(angle) * horDist - 0.5f * mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist - 2 * mod * vertDist;
+					break;
+				case 3:
+					x = Radius * Math.Cos(angle) * horDist + 0.5f * mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist - 2 * mod * vertDist;
+					break;
+				case 4:
+					x = Radius * Math.Cos(angle) * horDist + mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist;
+					break;
+				case 5:
+					x = Radius * Math.Cos(angle) * horDist + 0.5f * mod * horDist;
+					y = Radius * Math.Sin(angle) * horDist + 2 * mod * vertDist;
+					break;
+			}
+
+			return new Point(x, y);
+		}
+
+		public  Point GetHexCorner(Point Center,double HexRadius, int Corner, double Margin = 0)
+		{
+			double angle_deg = 60 * Corner + 30;
+			double angle_rad = Math.PI * angle_deg / 180;
+
+			return new Point(Center.X + (HexRadius - Margin) * Math.Cos(angle_rad), Center.Y + (HexRadius - Margin) * Math.Sin(angle_rad));
+		}
+
+		public  PointCollection GetHexCorners(Point Center, double HexRadius, double Margin = 0)
+		{
+			double angle_deg;
+			double angle_rad;
+			PointCollection points = new PointCollection();
+
+			for (int corner = 0; corner < 6; corner++)
+			{
+				angle_deg = 60 * corner + 30;
+				angle_rad = Math.PI * angle_deg / 180;
+
+				points.Add(new Point(Center.X + (HexRadius - Margin) * Math.Cos(angle_rad), Center.Y + (HexRadius - Margin) * Math.Sin(angle_rad)));
+			}
+			return points;
+		}
+
+
+
 	}
 }

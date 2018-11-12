@@ -215,7 +215,15 @@ namespace HexLibTest
 
 
 			// Not aligned cell
-			tofoo
+			ng = new HexCoordinate(2, 9).GetNeighbours().ToArray();
+			Assert.AreEqual(6, ng.Length);
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 8)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 10)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 5)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 13)));
+			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 14)));//*/
+
 		}
 
 
