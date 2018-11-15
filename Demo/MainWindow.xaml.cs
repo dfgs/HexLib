@@ -24,5 +24,23 @@ namespace Demo
 		{
 			InitializeComponent();
 		}
+
+
+		private void SetPivotCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			AppViewModel vm = e.Parameter as AppViewModel;
+
+			e.Handled = true;
+			if (vm == null) return;
+			e.CanExecute = vm.SelectedItem != null;
+		}
+
+		private void SetPivotCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			AppViewModel vm = e.Parameter as AppViewModel;
+
+			vm.Pivot = vm.SelectedItem;
+		}
+
 	}
 }

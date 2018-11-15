@@ -40,6 +40,7 @@ namespace HexLib
 			private set;
 		}
 
+
 		public HexCoordinate(int Radius,int RingIndex)
 		{
 			if (Radius < 0) throw new ArgumentException("Radius");
@@ -58,7 +59,7 @@ namespace HexLib
 			{
 				this.RingIndex=  RingIndex % HexMap.GetPerimeter(Radius);
 				if (this.RingIndex < 0) this.RingIndex = this.RingIndex + HexMap.GetPerimeter(Radius);
-				this.DirectionIndex=this.RingIndex / Radius;
+				this.DirectionIndex= this.RingIndex / Radius;
 				this.Index = Radius * (Radius - 1) / 2 * 6 + 1 + this.RingIndex;
 				this.IsAxisAligned = (this.RingIndex % this.Radius) == 0;
 			}
@@ -89,7 +90,7 @@ namespace HexLib
 
 		public HexCoordinate JumpTransform(int Count)
 		{
-			return new HexCoordinate(Radius+Count, RingIndex + Count* DirectionIndex);
+			return new HexCoordinate(Radius+Count, RingIndex * (Radius+Count)/Radius );
 		}
 
 
@@ -108,23 +109,68 @@ namespace HexLib
 
 			yield return this.RotateTransform(-1);
 			yield return this.RotateTransform(1);
+			yield return this.JumpTransform(1);
+			yield return this.JumpTransform(-1);
 
 			if (this.IsAxisAligned)
 			{
-				yield return this.JumpTransform(-1);
-				yield return this.JumpTransform(1);
 				yield return this.JumpTransform(1).RotateTransform(-1);
 				yield return this.JumpTransform(1).RotateTransform(1);
 			}
 			else
 			{
-				yield return this.JumpTransform(1);
 				yield return this.JumpTransform(1).RotateTransform(1);
-				yield return this.JumpTransform(-1);
-				yield return this.JumpTransform(-1).RotateTransform(-1);
+				yield return this.JumpTransform(-1).RotateTransform(1);
 
 			}
 		}
+
+
+		
+
+		public double GetAngleTo(HexCoordinate Other)
+		{
+			double angle1, angle2;
+			double delta;
+
+			angle1 = 360 * this.RingIndex/ HexMap.GetPerimeter(this.Radius);
+			angle2 = 360 * Other.RingIndex / HexMap.GetPerimeter(Other.Radius);
+
+			delta = angle1 - angle2;
+			if (delta > 180) delta = -360+delta;
+			//if (delta < -180) delta = 180 + delta;
+
+			return delta;
+		}
+
+		public int GetTaxiDriverDistanceTo(HexCoordinate Other)
+		{
+			return -1;
+		}
+
+		/*public Point ToScreenCoordinate(double HexRadius)
+		{
+			double x, y;
+			double angle;
+			double r;
+			int mod;
+
+			if (Radius == 0) return new Point(0, 0);
+
+			angle = 2 * Math.PI * this.RingIndex / HexMap.GetPerimeter(this.Radius);
+
+			mod = this.RingIndex % this.Radius;
+			r = Math.Sqrt(3) * HexRadius*this.Radius;
+			if (mod != 0) r = Math.Sqrt(3.0d*r*r/4.0d);
+			//else r = Math.Sqrt(3) / 2.0d * HexRadius; //3l²/4
+
+			x = r * Math.Cos(angle) ;
+			y = r * Math.Sin(angle) ;
+
+			
+			return new Point(x, y);
+		}
+		//*/
 
 		public Point ToScreenCoordinate(double HexRadius)
 		{
@@ -174,8 +220,9 @@ namespace HexLib
 
 			return new Point(x, y);
 		}
+		//*/
 
-		public  Point GetHexCorner(Point Center,double HexRadius, int Corner, double Margin = 0)
+		public Point GetHexCorner(Point Center,double HexRadius, int Corner, double Margin = 0)
 		{
 			double angle_deg = 60 * Corner + 30;
 			double angle_rad = Math.PI * angle_deg / 180;

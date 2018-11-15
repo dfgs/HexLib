@@ -7,40 +7,54 @@
 		xmlns:hexLib="clr-namespace:HexLib;assembly=HexLib"
         mc:Ignorable="d"
         Title="Demo" Height="800" Width="1024" WindowStartupLocation="CenterScreen" ResizeMode="CanResizeWithGrip" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+	
 	<Window.Resources>
 		<local:AppViewModel x:Key="appViewModel"/>
 		<DataTemplate DataType="{x:Type hexLib:HexCoordinate}">
-			<StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-				<TextBlock Text="{Binding Radius}"/>
-				<TextBlock Text=","/>
-				<TextBlock Text="{Binding Index}"/>
+			<StackPanel>
+				<StackPanel Orientation="Horizontal" >
+					<TextBlock Text="{Binding Radius}"/>
+					<TextBlock Text=","/>
+					<TextBlock Text="{Binding RingIndex}"/>
+				</StackPanel>
+				<TextBlock Text="{Binding DirectionIndex}" Foreground="LightGray" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</DataTemplate>
+		<RoutedCommand x:Key="setPivotCommand"/>
 	</Window.Resources>
+
+	<Window.InputBindings>
+		<KeyBinding Command="{StaticResource setPivotCommand}" Key="Return"/>
+	</Window.InputBindings>
+	
+	<Window.CommandBindings>
+		<CommandBinding Command="{StaticResource setPivotCommand}"  CanExecute="SetPivotCommandBinding_CanExecute" Executed="SetPivotCommandBinding_Executed"/>
+	</Window.CommandBindings>
 	
     <DockPanel DataContext="{StaticResource appViewModel}">
 		<ToolBarPanel DockPanel.Dock="Top">
 			<ToolBarTray>
 				<ToolBar>
 					<ComboBox Width="150" ItemsSource="{x:Static local:AppViewModel.DemoModes}" SelectedItem="{Binding DemoMode}"/>
+					<Button Content="Set pivot" Command="{StaticResource setPivotCommand}" CommandParameter="{Binding}"/>
 				</ToolBar>
 			</ToolBarTray>
 		</ToolBarPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<TextBlock/>
 		</StatusBar>
-		<ListBox ItemsSource="{Binding HexMap}" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<ListBox ItemsSource="{Binding HexMap}" SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" HorizontalAlignment="Center" VerticalAlignment="Center">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="{x:Type ListBoxItem}">
 					<Setter Property="local:HexMapPanel.Coordinate" Value="{Binding Coordinate}"/>
 					<Setter Property="BorderBrush" Value="Gray"/>
-					<Setter Property="Background" Value="Transparent"/>
+					<Setter Property="Background" Value="{Binding Background}"/>
 					<Setter Property="Template">
 						<Setter.Value>
 							<ControlTemplate TargetType="{x:Type ListBoxItem}">
 								<Grid>
 									<Polygon Points="{Binding Points}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}"/>
-									<ContentPresenter Content="{Binding Content}"/>
+									<ContentPresenter Content="{Binding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 								</Grid>
 							</ControlTemplate>
 						</Setter.Value>

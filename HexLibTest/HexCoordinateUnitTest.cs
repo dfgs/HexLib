@@ -184,8 +184,10 @@ namespace HexLibTest
 			coord = new HexCoordinate(2, 0).JumpTransform(-2); Assert.AreEqual(0, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
 
 			coord = new HexCoordinate(2, 1).JumpTransform(1); Assert.AreEqual(3, coord.Radius); Assert.AreEqual(1, coord.RingIndex);
-			coord = new HexCoordinate(2, 1).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(1, coord.RingIndex);
-
+			coord = new HexCoordinate(2, 1).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(2, coord.RingIndex);
+			coord = new HexCoordinate(2, 9).JumpTransform(3); Assert.AreEqual(5, coord.Radius); Assert.AreEqual(22, coord.RingIndex);
+			coord = new HexCoordinate(2, 9).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(18, coord.RingIndex);
+			//*/
 		}
 
 		[TestMethod]

@@ -12,6 +12,15 @@ namespace Demo
 	public class HexViewModel:DependencyObject
 	{
 
+
+		public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", typeof(string), typeof(HexViewModel),new PropertyMetadata("Transparent"));
+		public string Background
+		{
+			get { return (string)GetValue(BackgroundProperty); }
+			set { SetValue(BackgroundProperty, value); }
+		}
+
+
 		public static readonly DependencyProperty CoordinateProperty = DependencyProperty.Register("Coordinate", typeof(HexCoordinate), typeof(HexViewModel));
 		public HexCoordinate Coordinate
 		{
