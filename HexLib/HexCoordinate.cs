@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace HexLib
 {
-	public struct HexCoordinate:IEquatable<HexCoordinate>
+	public struct HexCoordinate:IEquatable<HexCoordinate>,IComparable<HexCoordinate>
 	{
 		public int Radius
 		{
@@ -73,6 +73,11 @@ namespace HexLib
 			else return false;
 		}
 
+		public int CompareTo(HexCoordinate other)
+		{
+			return this.Index.CompareTo(other.Index);
+		}
+
 		public override int GetHashCode()
 		{
 			return this.Index;
@@ -126,9 +131,9 @@ namespace HexLib
 		}
 
 
-		
 
-		public double GetAngleTo(HexCoordinate Other)
+
+		/*public double GetAngleTo(HexCoordinate Other)
 		{
 			double angle1, angle2;
 			double delta;
@@ -142,10 +147,42 @@ namespace HexLib
 
 			return delta;
 		}
+		//*/
+
+		public int GetAngleTo(HexCoordinate Other)
+		{
+			double result;
+			double halfPerimeter;
+			double projectedRingIndex;
+
+			if (Radius == 0) return 0;
+
+			halfPerimeter = Other.Radius * 3;
+
+
+			projectedRingIndex = this.RingIndex * Other.Radius / (double)this.Radius;
+
+			result = Math.Abs((double)Other.RingIndex - projectedRingIndex);//%(6*Other.Radius);
+
+			if (result > halfPerimeter) result =  2.0d * halfPerimeter-result;
+
+			return (int)result;
+		}
 
 		public int GetTaxiDriverDistanceTo(HexCoordinate Other)
 		{
-			return -1;
+			int angle;
+
+			if (Other.Radius == 0) return Radius;
+
+			angle = GetAngleTo(Other);
+
+			if (angle >= Other.Radius*2.5) return this.Radius + Other.Radius;
+
+			int t = Other.Radius - this.Radius + 1;
+			if (t == 0) return -1;
+			return angle/t;// Math.Abs(Other.Radius-this.Radius)+(angle/4);
+			
 		}
 
 		/*public Point ToScreenCoordinate(double HexRadius)
@@ -251,7 +288,6 @@ namespace HexLib
 			return $"[{Radius},{Index}]";
 		}
 
-
-
+		
 	}
 }

@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Demo
 {
-	public enum DemoModes {Coordinates,Indices,Neighbours, Distance	};
+	public enum DemoModes {Coordinates,Indices,Neighbours,Angle, Distance	};
 }

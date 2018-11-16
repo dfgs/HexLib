@@ -58,7 +58,10 @@ namespace Demo
 				for(int i=0;i<HexLib.HexMap.GetPerimeter(r);i++)
 				{
 					item = new HexViewModel(new HexCoordinate(r, i),HexRadius) ;
+					if ((r & 1) != 0) item.Background = "WhiteSmoke";
+					else item.Background = "White";
 					HexMap[item.Coordinate] = item;
+					
 				}
 			}
 			OnDemoModeChanged();
@@ -96,8 +99,11 @@ namespace Demo
 				case Demo.DemoModes.Neighbours:
 					OnUpdateHexContentWithNeighbors();
 					break;
+				case Demo.DemoModes.Angle:
+					OnUpdateHexContentWithAngles();
+					break;
 				case Demo.DemoModes.Distance:
-					OnUpdateHexContentWithDistance();
+					OnUpdateHexContentWithDistances();
 					break;
 				default:
 					OnClearHexContent();
@@ -119,7 +125,10 @@ namespace Demo
 					OnUpdateHexContentWithNeighbors();
 					break;
 				case Demo.DemoModes.Distance:
-					OnUpdateHexContentWithDistance();
+					OnUpdateHexContentWithDistances();
+					break;
+				case Demo.DemoModes.Angle:
+					OnUpdateHexContentWithAngles();
 					break;
 			}
 		}
@@ -139,6 +148,18 @@ namespace Demo
 			}
 		}
 
+		protected void OnUpdateHexContentWithAngles()
+		{
+
+			foreach (HexViewModel hex in HexMap)
+			{
+				if (SelectedItem == null) hex.Content = null;
+				else
+				{
+					hex.Content= SelectedItem.Coordinate.GetAngleTo(hex.Coordinate);
+				}
+			}
+		}
 		protected void OnUpdateHexContentWithNeighbors()
 		{
 			foreach (HexViewModel hex in HexMap)
@@ -153,17 +174,19 @@ namespace Demo
 				HexMap[coordinate].Content = coordinate;
 			}
 		}
-		protected void OnUpdateHexContentWithDistance()
+		protected void OnUpdateHexContentWithDistances()
 		{
+			int result;
+
 			foreach (HexViewModel hex in HexMap)
 			{
-				if (hex == SelectedItem)
-				{
-					hex.Content = hex.Coordinate;
-					continue;
-				}
 				if (SelectedItem == null) hex.Content = null;
-				else hex.Content = hex.Coordinate.GetAngleTo(SelectedItem.Coordinate);
+				else
+				{
+					result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate);
+					if (result == -1) hex.Content = null;
+					else hex.Content = result;
+				}
 			}
 		}
 		protected void OnClearHexContent()
