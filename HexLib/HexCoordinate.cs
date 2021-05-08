@@ -171,18 +171,25 @@ namespace HexLib
 
 		public int GetTaxiDriverDistanceTo(HexCoordinate Other)
 		{
-			int angle;
+			int delta;
+			double projectedRingIndex;
 
-			if (Other.Radius == 0) return Radius;
+			if (Radius == 0) return Other.Radius; ;
 
-			angle = GetAngleTo(Other);
+			if (Other.Radius <= this.Radius) return -1;
 
-			if (angle >= Other.Radius*2.5) return this.Radius + Other.Radius;
+			projectedRingIndex = this.RingIndex * Other.Radius / (double)this.Radius;
+			delta = (int)Math.Abs(Other.RingIndex - projectedRingIndex);
 
-			int t = Other.Radius - this.Radius + 1;
-			if (t == 0) return -1;
-			return angle/t;// Math.Abs(Other.Radius-this.Radius)+(angle/4);
-			
+			if (this.IsAxisAligned)
+			{
+				if (delta <= (Other.Radius - this.Radius)) return 0;
+			}
+			else
+			{
+				if (delta <= (Other.Radius - this.Radius-1)) return 0;
+			}
+			return -1;
 		}
 
 		/*public Point ToScreenCoordinate(double HexRadius)
