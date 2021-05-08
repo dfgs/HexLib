@@ -20,7 +20,12 @@ namespace Demo
 			get { return (DemoModes)GetValue(DemoModeProperty); }
 			set { SetValue(DemoModeProperty, value); }
 		}
-
+		public static readonly DependencyProperty CountProperty = DependencyProperty.Register("Count", typeof(int), typeof(AppViewModel), new PropertyMetadata(1, DemoModePropertyChanged));
+		public int Count
+		{
+			get { return (int)GetValue(CountProperty); }
+			set { SetValue(CountProperty, value); }
+		}
 
 		public static readonly DependencyProperty HexMapProperty = DependencyProperty.Register("HexMap", typeof(HexMap<HexViewModel>), typeof(AppViewModel));
 		public HexMap<HexViewModel> HexMap
@@ -105,6 +110,9 @@ namespace Demo
 				case Demo.DemoModes.Distance:
 					OnUpdateHexContentWithDistances();
 					break;
+				case Demo.DemoModes.JumpTransform:
+					OnUpdateHexContentWithJumpTransform();
+					break;
 				default:
 					OnClearHexContent();
 					break;
@@ -129,6 +137,9 @@ namespace Demo
 					break;
 				case Demo.DemoModes.Angle:
 					OnUpdateHexContentWithAngles();
+					break;
+				case Demo.DemoModes.JumpTransform:
+					OnUpdateHexContentWithJumpTransform();
 					break;
 			}
 		}
@@ -176,19 +187,43 @@ namespace Demo
 		}
 		protected void OnUpdateHexContentWithDistances()
 		{
-			int result;
+			object result;
 
 			foreach (HexViewModel hex in HexMap)
 			{
 				if (SelectedItem == null) hex.Content = null;
 				else
 				{
-					result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate);
-					if (result == -1) hex.Content = null;
-					else hex.Content = result;
+					//result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate) + " / " + HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
+					result =  HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
+					//if (result == -1) hex.Content = null;
+					hex.Content = result;
 				}
 			}
 		}
+
+		protected void OnUpdateHexContentWithJumpTransform()
+		{
+			object result;
+			HexCoordinate[] results;
+
+			foreach (HexViewModel hex in HexMap)
+			{
+				if (SelectedItem == null) hex.Content = null;
+				else
+				{
+					if (hex == SelectedItem)
+					{
+						results = SelectedItem.Coordinate.JumpTransform(Count).ToArray();
+						result = results.First().Radius.ToString() + "," + string.Join("-", results.Select(item=>item.RingIndex) );
+						//result = results.FirstOrDefault().Radius.ToString() + "," + results.FirstOrDefault().RingIndex+"-" + results.LastOrDefault().RingIndex;
+					}
+					else result = hex.Coordinate;
+					hex.Content = result;
+				}
+			}
+		}
+
 		protected void OnClearHexContent()
 		{
 			foreach (HexViewModel hex in HexMap)

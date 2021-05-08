@@ -93,9 +93,68 @@ namespace HexLib
 			return new HexCoordinate(Radius, RingIndex+Count);
 		}
 
-		public HexCoordinate JumpTransform(int Count)
+		public IEnumerable<HexCoordinate> JumpUpTransform()
 		{
-			return new HexCoordinate(Radius+Count, RingIndex * (Radius+Count)/Radius );
+			int start, stop;
+
+			if (Radius == 0)
+			{
+				yield return new HexCoordinate(1, 0);
+				yield return new HexCoordinate(1, 1);
+				yield return new HexCoordinate(1, 2);
+				yield return new HexCoordinate(1, 3);
+				yield return new HexCoordinate(1, 4);
+				yield return new HexCoordinate(1, 5);
+				yield break;
+			}
+
+			stop = RingIndex + DirectionIndex + 1;
+			if (IsAxisAligned) start = RingIndex + DirectionIndex - 1;
+			else start = RingIndex + DirectionIndex;
+ 			
+			for (int index = start; index <= stop; index++)
+			{
+				yield return new HexCoordinate(Radius + 1, index);
+			}
+		}
+
+		public IEnumerable<HexCoordinate> JumpDownTransform()
+		{
+			int start, stop;
+
+			if (Radius == 0) yield break;
+
+			if (IsAxisAligned)
+			{
+				yield return new HexCoordinate(Radius - 1, RingIndex-DirectionIndex);
+				yield break;
+			}
+
+			stop = RingIndex - DirectionIndex ;
+			start = RingIndex - DirectionIndex-1;
+
+			for (int index = start; index <= stop; index++)
+			{
+				yield return new HexCoordinate(Radius - 1, index);
+			}
+		}
+
+		public IEnumerable<HexCoordinate> JumpTransform(int Count)
+		{
+			if (Count == 0)
+			{
+				yield return this;
+				yield break;
+			}
+
+			if (Count>0)
+			{
+				foreach (HexCoordinate coordinate in JumpUpTransform().SelectMany(item => item.JumpTransform(Count - 1)).Distinct() ) yield return coordinate;
+			}
+			else
+			{
+				foreach (HexCoordinate coordinate in JumpDownTransform().SelectMany(item => item.JumpTransform(Count + 1)).Distinct()) yield return coordinate;
+			}
 		}
 
 
@@ -114,40 +173,14 @@ namespace HexLib
 
 			yield return this.RotateTransform(-1);
 			yield return this.RotateTransform(1);
-			yield return this.JumpTransform(1);
-			yield return this.JumpTransform(-1);
-
-			if (this.IsAxisAligned)
-			{
-				yield return this.JumpTransform(1).RotateTransform(-1);
-				yield return this.JumpTransform(1).RotateTransform(1);
-			}
-			else
-			{
-				yield return this.JumpTransform(1).RotateTransform(1);
-				yield return this.JumpTransform(-1).RotateTransform(1);
-
-			}
+			foreach (HexCoordinate hexCoordinate in this.JumpUpTransform()) yield return hexCoordinate;
+			foreach (HexCoordinate hexCoordinate in this.JumpDownTransform()) yield return hexCoordinate;
 		}
 
 
 
 
-		/*public double GetAngleTo(HexCoordinate Other)
-		{
-			double angle1, angle2;
-			double delta;
 
-			angle1 = 360 * this.RingIndex/ HexMap.GetPerimeter(this.Radius);
-			angle2 = 360 * Other.RingIndex / HexMap.GetPerimeter(Other.Radius);
-
-			delta = angle1 - angle2;
-			if (delta > 180) delta = -360+delta;
-			//if (delta < -180) delta = 180 + delta;
-
-			return delta;
-		}
-		//*/
 
 		public int GetAngleTo(HexCoordinate Other)
 		{
@@ -169,52 +202,8 @@ namespace HexLib
 			return (int)result;
 		}
 
-		public int GetTaxiDriverDistanceTo(HexCoordinate Other)
-		{
-			int delta;
-			double projectedRingIndex;
+		
 
-			if (Radius == 0) return Other.Radius; ;
-
-			if (Other.Radius <= this.Radius) return -1;
-
-			projectedRingIndex = this.RingIndex * Other.Radius / (double)this.Radius;
-			delta = (int)Math.Abs(Other.RingIndex - projectedRingIndex);
-
-			if (this.IsAxisAligned)
-			{
-				if (delta <= (Other.Radius - this.Radius)) return 0;
-			}
-			else
-			{
-				if (delta <= (Other.Radius - this.Radius-1)) return 0;
-			}
-			return -1;
-		}
-
-		/*public Point ToScreenCoordinate(double HexRadius)
-		{
-			double x, y;
-			double angle;
-			double r;
-			int mod;
-
-			if (Radius == 0) return new Point(0, 0);
-
-			angle = 2 * Math.PI * this.RingIndex / HexMap.GetPerimeter(this.Radius);
-
-			mod = this.RingIndex % this.Radius;
-			r = Math.Sqrt(3) * HexRadius*this.Radius;
-			if (mod != 0) r = Math.Sqrt(3.0d*r*r/4.0d);
-			//else r = Math.Sqrt(3) / 2.0d * HexRadius; //3l²/4
-
-			x = r * Math.Cos(angle) ;
-			y = r * Math.Sin(angle) ;
-
-			
-			return new Point(x, y);
-		}
-		//*/
 
 		public Point ToScreenCoordinate(double HexRadius)
 		{
@@ -292,7 +281,7 @@ namespace HexLib
 
 		public override string ToString()
 		{
-			return $"[{Radius},{Index}]";
+			return $"[{Radius},{RingIndex}]";
 		}
 
 		

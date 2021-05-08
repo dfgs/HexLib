@@ -37,6 +37,8 @@
 				<ToolBar>
 					<ComboBox Width="150" ItemsSource="{x:Static local:AppViewModel.DemoModes}" SelectedItem="{Binding DemoMode}"/>
 					<Button Content="Set pivot" Command="{StaticResource setPivotCommand}" CommandParameter="{Binding}"/>
+					<TextBlock VerticalAlignment="Center" Text="Count" />
+					<TextBox Width="150" Text="{Binding Count}" />
 				</ToolBar>
 			</ToolBarTray>
 		</ToolBarPanel>
@@ -46,6 +48,7 @@
 		<ListBox ItemsSource="{Binding HexMap}" SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" HorizontalAlignment="Center" VerticalAlignment="Center">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="{x:Type ListBoxItem}">
+					<Setter Property="ToolTip" Value="{Binding Content}"/>
 					<Setter Property="local:HexMapPanel.Coordinate" Value="{Binding Coordinate}"/>
 					<Setter Property="BorderBrush" Value="Gray"/>
 					<Setter Property="Background" Value="{Binding Background}"/>
