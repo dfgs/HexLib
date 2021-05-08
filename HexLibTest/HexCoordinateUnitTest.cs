@@ -173,22 +173,55 @@ namespace HexLibTest
 		}
 
 		[TestMethod]
-		public void ShouldJumpTransform()
+		public void ShouldJumpUpTransform()
 		{
-			HexCoordinate coord;
+			HexCoordinate[] coords;
 
 
-			coord = new HexCoordinate(2, 0).JumpTransform(1); Assert.AreEqual(3, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).JumpTransform(-1); Assert.AreEqual(1, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).JumpTransform(-2); Assert.AreEqual(0, coord.Radius); Assert.AreEqual(0, coord.RingIndex);
+			coords = new HexCoordinate(0, 0).JumpUpTransform().ToArray();
+			Assert.AreEqual(6, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 0)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 1)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 2)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 3)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 4)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 5)));
 
-			coord = new HexCoordinate(2, 1).JumpTransform(1); Assert.AreEqual(3, coord.Radius); Assert.AreEqual(1, coord.RingIndex);
-			coord = new HexCoordinate(2, 1).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(2, coord.RingIndex);
-			coord = new HexCoordinate(2, 9).JumpTransform(3); Assert.AreEqual(5, coord.Radius); Assert.AreEqual(22, coord.RingIndex);
-			coord = new HexCoordinate(2, 9).JumpTransform(2); Assert.AreEqual(4, coord.Radius); Assert.AreEqual(18, coord.RingIndex);
-			//*/
+			coords = new HexCoordinate(2, 9).JumpUpTransform().ToArray();
+			Assert.AreEqual(2, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(3, 13)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(3, 14)));
+
+			coords = new HexCoordinate(3, 12).JumpUpTransform().ToArray();
+			Assert.AreEqual(3, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 15)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 16)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 17)));
+	
 		}
+		[TestMethod]
+		public void ShouldJumpDownTransform()
+		{
+			HexCoordinate[] coords;
+
+
+			coords = new HexCoordinate(0, 0).JumpDownTransform().ToArray();
+			Assert.AreEqual(0, coords.Length);
+
+			coords = new HexCoordinate(1, 4).JumpDownTransform().ToArray();
+			Assert.AreEqual(1, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(0, 0)));
+
+			coords = new HexCoordinate(2, 9).JumpDownTransform().ToArray();
+			Assert.AreEqual(2, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 4)));
+			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 5)));
+
+			coords = new HexCoordinate(3, 12).JumpDownTransform().ToArray();
+			Assert.AreEqual(1, coords.Length);
+			Assert.IsTrue(coords.Contains(new HexCoordinate(2, 8)));
+		}
+
 
 		[TestMethod]
 		public void ShouldReturnNeighbours()

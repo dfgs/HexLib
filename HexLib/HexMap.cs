@@ -105,7 +105,7 @@ namespace HexLib
 				}
 			}
 
-			for (int r=0;r<=Radius;r++)
+			if (Radius>0) for (int r=0;r<=Radius;r++)
 			{
 				for (int i = 0; i < GetPerimeter(r); i++)
 				{
