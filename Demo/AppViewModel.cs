@@ -204,23 +204,16 @@ namespace Demo
 
 		protected void OnUpdateHexContentWithJumpTransform()
 		{
-			object result;
-			HexCoordinate[] results;
-
 			foreach (HexViewModel hex in HexMap)
 			{
-				if (SelectedItem == null) hex.Content = null;
-				else
-				{
-					if (hex == SelectedItem)
-					{
-						results = SelectedItem.Coordinate.JumpTransform(Count).ToArray();
-						result = results.First().Radius.ToString() + "," + string.Join("-", results.Select(item=>item.RingIndex) );
-						//result = results.FirstOrDefault().Radius.ToString() + "," + results.FirstOrDefault().RingIndex+"-" + results.LastOrDefault().RingIndex;
-					}
-					else result = hex.Coordinate;
-					hex.Content = result;
-				}
+				hex.Content = null;
+			}
+			if (SelectedItem == null) return;
+			HexMap[SelectedItem.Coordinate].Content = SelectedItem.Coordinate;
+			foreach (HexCoordinate coordinate in SelectedItem.Coordinate.JumpTransform(Count))
+			{
+				if (coordinate.Index >= HexMap.Count) continue;
+				HexMap[coordinate].Content = coordinate;
 			}
 		}
 

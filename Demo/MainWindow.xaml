@@ -37,8 +37,8 @@
 				<ToolBar>
 					<ComboBox Width="150" ItemsSource="{x:Static local:AppViewModel.DemoModes}" SelectedItem="{Binding DemoMode}"/>
 					<Button Content="Set pivot" Command="{StaticResource setPivotCommand}" CommandParameter="{Binding}"/>
-					<TextBlock VerticalAlignment="Center" Text="Count" />
-					<TextBox Width="150" Text="{Binding Count}" />
+					<TextBlock VerticalAlignment="Center" Text="Jump count" />
+					<TextBox Width="150" Text="{Binding Count,NotifyOnSourceUpdated=True}" />
 				</ToolBar>
 			</ToolBarTray>
 		</ToolBarPanel>
