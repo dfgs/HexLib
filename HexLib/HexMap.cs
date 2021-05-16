@@ -133,7 +133,70 @@ namespace HexLib
 		{
 			return Coordinate.GetNeighbours().Where(item => item.Index < Count);
 		}
+		public IEnumerable<HexCoordinate> DrawLine(HexCoordinate A, HexCoordinate B)
+		{
+			bool useMaxIndex=false;
+			yield return A;
+			
+			while(!A.Equals(B))
+			{
+				A = GetNearestCoordinateFromAToB(A, B,useMaxIndex);
+				if (A.Index > Count) yield break;
+				yield return A;
+				useMaxIndex = !useMaxIndex;
+			}
+		}
 
+		private HexCoordinate GetNearestCoordinateFromAToB(HexCoordinate A, HexCoordinate B,bool UseMaxIndex)
+		{
+			HexCoordinate[] neighbors;
+			HexCoordinate candidate;
+			List<HexCoordinate> candidates;
+			
+
+			int distance,candidateDistance;
+
+			neighbors = GetNeighbours(A).ToArray();
+			
+			if (neighbors.Contains(B)) return B;
+
+			candidates = new List<HexCoordinate>();
+			candidate = neighbors[0];
+			candidateDistance = GetDistance(candidate, B);
+			candidates.Add(candidate);
+
+			for(int t=1;t<neighbors.Length;t++)
+			{
+				distance = GetDistance(neighbors[t], B);
+				if (distance > candidateDistance) continue;
+				if (distance < candidateDistance)
+				{
+					candidates.Clear();
+					candidate = neighbors[t];candidateDistance = distance;
+					candidates.Add(candidate);
+					continue;
+				}
+				candidates.Add(neighbors[t]);
+			}
+
+			if (UseMaxIndex)
+			{
+				foreach(HexCoordinate coordinate in candidates)
+				{
+					if (coordinate.RingIndex < candidate.RingIndex) candidate = coordinate;
+				}
+			}
+			else
+			{
+				foreach (HexCoordinate coordinate in candidates)
+				{
+					if (coordinate.RingIndex > candidate.RingIndex) candidate = coordinate;
+				}
+
+			}
+
+			return candidate;
+		}
 
 		private void FillDistanceTo(HexCoordinate Origin, HexCoordinate Point, int Dist)
 		{
@@ -165,6 +228,7 @@ namespace HexLib
 			foreach (T item in items) yield return item;
 		}
 
+		
 	}
 
 }

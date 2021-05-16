@@ -113,6 +113,9 @@ namespace Demo
 				case Demo.DemoModes.JumpTransform:
 					OnUpdateHexContentWithJumpTransform();
 					break;
+				case Demo.DemoModes.DrawLine:
+					OnUpdateHexContentWithDrawLine();
+					break;
 				default:
 					OnClearHexContent();
 					break;
@@ -140,6 +143,9 @@ namespace Demo
 					break;
 				case Demo.DemoModes.JumpTransform:
 					OnUpdateHexContentWithJumpTransform();
+					break;
+				case Demo.DemoModes.DrawLine:
+					OnUpdateHexContentWithDrawLine();
 					break;
 			}
 		}
@@ -211,6 +217,21 @@ namespace Demo
 			if (SelectedItem == null) return;
 			HexMap[SelectedItem.Coordinate].Content = SelectedItem.Coordinate;
 			foreach (HexCoordinate coordinate in SelectedItem.Coordinate.JumpTransform(Count))
+			{
+				if (coordinate.Index >= HexMap.Count) continue;
+				HexMap[coordinate].Content = coordinate;
+			}
+		}
+
+		protected void OnUpdateHexContentWithDrawLine()
+		{
+			foreach (HexViewModel hex in HexMap)
+			{
+				hex.Content = null;
+			}
+			if ((SelectedItem == null) || (Pivot==null)) return;
+			
+			foreach (HexCoordinate coordinate in HexMap.DrawLine(Pivot.Coordinate,SelectedItem.Coordinate))
 			{
 				if (coordinate.Index >= HexMap.Count) continue;
 				HexMap[coordinate].Content = coordinate;
