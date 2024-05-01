@@ -107,6 +107,12 @@ namespace Demo
 				case Demo.DemoModes.Angle:
 					OnUpdateHexContentWithAngles();
 					break;
+				case Demo.DemoModes.AngleBetweenCells:
+					OnUpdateHexContentWithAngleBetweenCells();
+					break;
+				case Demo.DemoModes.DistanceOld:
+					OnUpdateHexContentWithDistancesOld();
+					break;
 				case Demo.DemoModes.Distance:
 					OnUpdateHexContentWithDistances();
 					break;
@@ -130,24 +136,7 @@ namespace Demo
 		{
 			if (HexMap == null) return;
 
-			switch (DemoMode)
-			{
-				case Demo.DemoModes.Neighbours:
-					OnUpdateHexContentWithNeighbors();
-					break;
-				case Demo.DemoModes.Distance:
-					OnUpdateHexContentWithDistances();
-					break;
-				case Demo.DemoModes.Angle:
-					OnUpdateHexContentWithAngles();
-					break;
-				case Demo.DemoModes.JumpTransform:
-					OnUpdateHexContentWithJumpTransform();
-					break;
-				case Demo.DemoModes.DrawLine:
-					OnUpdateHexContentWithDrawLine();
-					break;
-			}
+			OnDemoModeChanged();
 		}
 		protected void OnUpdateHexContentWithCoordinates()
 		{
@@ -173,10 +162,23 @@ namespace Demo
 				if (SelectedItem == null) hex.Content = null;
 				else
 				{
-					hex.Content= SelectedItem.Coordinate.GetAngleTo(hex.Coordinate);
+					hex.Content= HexMap.GetAngle(hex.Coordinate);
 				}
 			}
 		}
+		protected void OnUpdateHexContentWithAngleBetweenCells()
+		{
+
+			foreach (HexViewModel hex in HexMap)
+			{
+				if (SelectedItem == null) hex.Content = null;
+				else
+				{
+					hex.Content = HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate);
+				}
+			}
+		}
+
 		protected void OnUpdateHexContentWithNeighbors()
 		{
 			foreach (HexViewModel hex in HexMap)
@@ -191,7 +193,7 @@ namespace Demo
 				HexMap[coordinate].Content = coordinate;
 			}
 		}
-		protected void OnUpdateHexContentWithDistances()
+		protected void OnUpdateHexContentWithDistancesOld()
 		{
 			object result;
 
@@ -201,8 +203,22 @@ namespace Demo
 				else
 				{
 					//result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate) + " / " + HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
-					result =  HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
+					result =  HexMap.GetDistanceOld(SelectedItem.Coordinate, hex.Coordinate);
 					//if (result == -1) hex.Content = null;
+					hex.Content = result;
+				}
+			}
+		}
+		protected void OnUpdateHexContentWithDistances()
+		{
+			object result;
+
+			foreach (HexViewModel hex in HexMap)
+			{
+				if (SelectedItem == null) hex.Content = null;
+				else
+				{
+					result = $"{HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate)}\r\n{HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate)}";
 					hex.Content = result;
 				}
 			}

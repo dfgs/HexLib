@@ -47,13 +47,13 @@ namespace HexLibTest
 		}
 
 		[TestMethod]
-		public void ShouldReturnCorrectCount()
+		public void ShouldReturnCorrectMapSize()
 		{
 			Assert.ThrowsException<ArgumentException>(() => { HexMap.GetPerimeter(-1); });
-			Assert.AreEqual(1, HexMap.GetCount(0));
-			Assert.AreEqual(7, HexMap.GetCount(1));
-			Assert.AreEqual(19, HexMap.GetCount(2));
-			Assert.AreEqual(37, HexMap.GetCount(3));
+			Assert.AreEqual(1, HexMap.GetMapSize(0));
+			Assert.AreEqual(7, HexMap.GetMapSize(1));
+			Assert.AreEqual(19, HexMap.GetMapSize(2));
+			Assert.AreEqual(37, HexMap.GetMapSize(3));
 		}
 
 		[TestMethod]
@@ -81,7 +81,7 @@ namespace HexLibTest
 			map = new HexMap<HexCoordinate>(5);
 			for(int r=0;r<=5;r++)
 			{
-				for(int i=0;i<HexMap.GetCount(r);i++)
+				for(int i=0;i<HexMap.GetMapSize(r);i++)
 				{
 					coordinate = new HexCoordinate(r, i);
 					map[coordinate] = coordinate;
@@ -90,7 +90,7 @@ namespace HexLibTest
 
 			for (int r = 0; r <= 5; r++)
 			{
-				for (int i = 0; i < HexMap.GetCount(r); i++)
+				for (int i = 0; i < HexMap.GetMapSize(r); i++)
 				{
 					coordinate = new HexCoordinate(r, i);
 					Assert.AreEqual(coordinate, map[coordinate]);

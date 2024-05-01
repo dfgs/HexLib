@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Demo
 {
-	public enum DemoModes {Coordinates,Indices,Neighbours,Angle, Distance, JumpTransform, DrawLine };
+	public enum DemoModes {Coordinates,Indices,Neighbours,Angle, AngleBetweenCells, DistanceOld,Distance, JumpTransform, DrawLine };
 }

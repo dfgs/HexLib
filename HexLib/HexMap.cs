@@ -26,15 +26,55 @@ namespace HexLib
 			if (Radius == 0) return 1;
 			return 6 * Radius;
 		}
-		public static int GetCount(int Radius)
+		public static int GetMapSize(int Radius)
 		{
 			if (Radius < 0) throw (new ArgumentException("Radius"));
 			return Radius * (Radius + 1) / 2 * 6 + 1;
 		}
 
-		public int GetDistance(HexCoordinate A,HexCoordinate B)
+		public int GetDistanceOld(HexCoordinate CoordinateA, HexCoordinate CoordinateB)
 		{
-			return distances[A.Index, B.Index];
+			return distances[CoordinateA.Index, CoordinateB.Index];
+		}
+
+		public int GetDistance(HexCoordinate CoordinateA, HexCoordinate CoordinateB)
+		{
+			double angle;
+
+			if (CoordinateA.Radius == 0) return CoordinateB.Radius;
+			if (CoordinateB.Radius == 0) return CoordinateA.Radius;
+
+			angle = GetAngle(CoordinateA, CoordinateB);
+			if (angle >= 120) return CoordinateA.Radius + CoordinateB.Radius;
+			if (angle <= 30) return Math.Abs(CoordinateA.Radius - CoordinateB.Radius);
+			return -1;
+		}
+
+		public double GetAngle(HexCoordinate Coordinate)
+		{
+			double result;
+			
+			if (Coordinate.Radius == 0) return 0;
+			result = Coordinate.RingIndex *360 / GetPerimeter(Coordinate.Radius) ;
+
+			return result;
+		}
+		public double GetAngle(HexCoordinate CoordinateA, HexCoordinate CoordinateB)
+		{
+			double angleA,angleB;
+			double result;
+
+
+			angleA = GetAngle(CoordinateA);
+			angleB=GetAngle(CoordinateB);
+
+			if ((CoordinateA.Radius == 0) || (CoordinateB.Radius == 0)) return 0;
+
+			result = Math.Abs((angleA - angleB)%360);
+			if (result > 180) result = 360 - result;
+
+			return result;
+			
 		}
 	}
 
@@ -82,7 +122,7 @@ namespace HexLib
 		{
 			if (Radius < 0) throw (new ArgumentException("Radius"));
 			this.Radius = Radius;
-			Count = HexMap.GetCount(Radius);
+			Count = HexMap.GetMapSize(Radius);
 			items = new T[Count];
 
 			distances = new int[Count, Count];
@@ -109,7 +149,7 @@ namespace HexLib
 			{
 				for (int i = 0; i < GetPerimeter(r); i++)
 				{
-					FillDistanceTo(new HexCoordinate(r, i), new HexCoordinate(r, i), 0);
+					FillDistanceToOld(new HexCoordinate(r, i), new HexCoordinate(r, i), 0);
 				}
 				
 			}
@@ -140,14 +180,14 @@ namespace HexLib
 			
 			while(!A.Equals(B))
 			{
-				A = GetNearestCoordinateFromAToB(A, B,useMaxIndex);
+				A = GetNearestCoordinateFromAToBOld(A, B,useMaxIndex);
 				if (A.Index > Count) yield break;
 				yield return A;
 				useMaxIndex = !useMaxIndex;
 			}
 		}
 
-		private HexCoordinate GetNearestCoordinateFromAToB(HexCoordinate A, HexCoordinate B,bool UseMaxIndex)
+		private HexCoordinate GetNearestCoordinateFromAToBOld(HexCoordinate A, HexCoordinate B,bool UseMaxIndex)
 		{
 			HexCoordinate[] neighbors;
 			HexCoordinate candidate;
@@ -162,12 +202,12 @@ namespace HexLib
 
 			candidates = new List<HexCoordinate>();
 			candidate = neighbors[0];
-			candidateDistance = GetDistance(candidate, B);
+			candidateDistance = GetDistanceOld(candidate, B);
 			candidates.Add(candidate);
 
 			for(int t=1;t<neighbors.Length;t++)
 			{
-				distance = GetDistance(neighbors[t], B);
+				distance = GetDistanceOld(neighbors[t], B);
 				if (distance > candidateDistance) continue;
 				if (distance < candidateDistance)
 				{
@@ -198,7 +238,7 @@ namespace HexLib
 			return candidate;
 		}
 
-		private void FillDistanceTo(HexCoordinate Origin, HexCoordinate Point, int Dist)
+		private void FillDistanceToOld(HexCoordinate Origin, HexCoordinate Point, int Dist)
 		{
 			int minDist;
 
@@ -213,7 +253,7 @@ namespace HexLib
 			{
 				if (distances[Origin.Index, neighbourCoordinate.Index] > newDist)
 				{
-					FillDistanceTo(Origin, neighbourCoordinate, newDist);
+					FillDistanceToOld(Origin, neighbourCoordinate, newDist);
 				}
 			}
 			

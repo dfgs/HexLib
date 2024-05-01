@@ -182,7 +182,7 @@ namespace HexLib
 
 
 
-		public int GetAngleTo(HexCoordinate Other)
+		/*public int GetAngleTo(HexCoordinate Other)
 		{
 			double result;
 			double halfPerimeter;
@@ -200,7 +200,7 @@ namespace HexLib
 			if (result > halfPerimeter) result =  2.0d * halfPerimeter-result;
 
 			return (int)result;
-		}
+		}*/
 
 		
 
