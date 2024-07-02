@@ -8,63 +8,26 @@ using System.Windows.Media;
 
 namespace HexLib
 {
-	public struct HexCoordinate:IEquatable<HexCoordinate>,IComparable<HexCoordinate>
+	public struct HexCoordinate:IHexCoordinate
 	{
-		public int Radius
-		{
-			get;
-			private set;
-		}
-
-		public int RingIndex
-		{
-			get;
-			private set;
-		}
-
-		public int DirectionIndex
+		public int A
 		{
 			get;
 			set;
 		}
-
-		public int Index
+		public int B
 		{
 			get;
-			private set;
+			set;
+		}
+		public int Type
+		{
+			get => (A + B) % 2;
 		}
 
-		public bool IsAxisAligned
+		public HexCoordinate(int A,int B)
 		{
-			get;
-			private set;
-		}
-
-
-		public HexCoordinate(int Radius,int RingIndex)
-		{
-			if (Radius < 0) throw new ArgumentException("Radius");
-			this.Radius = Radius;
-
-			
-
-			if (Radius == 0)
-			{
-				this.RingIndex = 0;
-				this.DirectionIndex = 0;
-				this.Index = 0;
-				IsAxisAligned = true;
-			}
-			else
-			{
-				this.RingIndex=  RingIndex % HexMap.GetPerimeter(Radius);
-				if (this.RingIndex < 0) this.RingIndex = this.RingIndex + HexMap.GetPerimeter(Radius);
-				this.DirectionIndex= this.RingIndex / Radius;
-				this.Index = Radius * (Radius - 1) / 2 * 6 + 1 + this.RingIndex;
-				this.IsAxisAligned = (this.RingIndex % this.Radius) == 0;
-			}
-
-
+			this.A = A;this.B = B;
 		}
 
 		public override bool Equals(object obj)
@@ -73,139 +36,26 @@ namespace HexLib
 			else return false;
 		}
 
-		public int CompareTo(HexCoordinate other)
-		{
-			return this.Index.CompareTo(other.Index);
-		}
-
 		public override int GetHashCode()
 		{
-			return this.Index;
+			return ToString().GetHashCode();
 		}
 
-		public bool Equals(HexCoordinate Other)
+		public bool Equals(IHexCoordinate Other)
 		{
-			return (Other.Index== this.Index);
+			return ((this.A == Other.A) && (this.B == Other.B));
 		}
 
-		public HexCoordinate RotateTransform(int Count)
+		public IEnumerable<IHexCoordinate> GetNeighbors()
 		{
-			return new HexCoordinate(Radius, RingIndex+Count);
-		}
-
-		public IEnumerable<HexCoordinate> JumpUpTransform()
-		{
-			int start, stop;
-
-			if (Radius == 0)
-			{
-				yield return new HexCoordinate(1, 0);
-				yield return new HexCoordinate(1, 1);
-				yield return new HexCoordinate(1, 2);
-				yield return new HexCoordinate(1, 3);
-				yield return new HexCoordinate(1, 4);
-				yield return new HexCoordinate(1, 5);
-				yield break;
-			}
-
-			stop = RingIndex + DirectionIndex + 1;
-			if (IsAxisAligned) start = RingIndex + DirectionIndex - 1;
-			else start = RingIndex + DirectionIndex;
- 			
-			for (int index = start; index <= stop; index++)
-			{
-				yield return new HexCoordinate(Radius + 1, index);
-			}
-		}
-
-		public IEnumerable<HexCoordinate> JumpDownTransform()
-		{
-			int start, stop;
-
-			if (Radius == 0) yield break;
-
-			if (IsAxisAligned)
-			{
-				yield return new HexCoordinate(Radius - 1, RingIndex-DirectionIndex);
-				yield break;
-			}
-
-			stop = RingIndex - DirectionIndex ;
-			start = RingIndex - DirectionIndex-1;
-
-			for (int index = start; index <= stop; index++)
-			{
-				yield return new HexCoordinate(Radius - 1, index);
-			}
-		}
-
-		public IEnumerable<HexCoordinate> JumpTransform(int Count)
-		{
-			if (Count == 0)
-			{
-				yield return this;
-				yield break;
-			}
-
-			if (Count>0)
-			{
-				foreach (HexCoordinate coordinate in JumpUpTransform().SelectMany(item => item.JumpTransform(Count - 1)).Distinct() ) yield return coordinate;
-			}
-			else
-			{
-				foreach (HexCoordinate coordinate in JumpDownTransform().SelectMany(item => item.JumpTransform(Count + 1)).Distinct()) yield return coordinate;
-			}
+			yield return new HexCoordinate(A - 1, B);
+			yield return new HexCoordinate(A + 1, B);
+			if (Type == 1) yield return new HexCoordinate(A, B - 1);
+			else yield return new HexCoordinate(A, B + 1);
 		}
 
 
-		public IEnumerable<HexCoordinate> GetNeighbours()
-		{
-			if (this.Radius == 0)
-			{
-				yield return new HexCoordinate(1, 0);
-				yield return new HexCoordinate(1, 1);
-				yield return new HexCoordinate(1, 2);
-				yield return new HexCoordinate(1, 3);
-				yield return new HexCoordinate(1, 4);
-				yield return new HexCoordinate(1, 5);
-				yield break;
-			}
-
-			yield return this.RotateTransform(-1);
-			yield return this.RotateTransform(1);
-			foreach (HexCoordinate hexCoordinate in this.JumpUpTransform()) yield return hexCoordinate;
-			foreach (HexCoordinate hexCoordinate in this.JumpDownTransform()) yield return hexCoordinate;
-		}
-
-
-
-
-
-
-		/*public int GetAngleTo(HexCoordinate Other)
-		{
-			double result;
-			double halfPerimeter;
-			double projectedRingIndex;
-
-			if (Radius == 0) return 0;
-
-			halfPerimeter = Other.Radius * 3;
-
-
-			projectedRingIndex = this.RingIndex * Other.Radius / (double)this.Radius;
-
-			result = Math.Abs((double)Other.RingIndex - projectedRingIndex);//%(6*Other.Radius);
-
-			if (result > halfPerimeter) result =  2.0d * halfPerimeter-result;
-
-			return (int)result;
-		}*/
-
-		
-
-
-		public Point ToScreenCoordinate(double HexRadius)
+		/*public Point ToScreenCoordinate(double HexRadius)
 		{
 			double x, y;
 			double angle;
@@ -255,7 +105,7 @@ namespace HexLib
 		}
 		//*/
 
-		public Point GetHexCorner(Point Center,double HexRadius, int Corner, double Margin = 0)
+		/*public Point GetHexCorner(Point Center,double HexRadius, int Corner, double Margin = 0)
 		{
 			double angle_deg = 60 * Corner + 30;
 			double angle_rad = Math.PI * angle_deg / 180;
@@ -277,11 +127,11 @@ namespace HexLib
 				points.Add(new Point(Center.X + (HexRadius - Margin) * Math.Cos(angle_rad), Center.Y + (HexRadius - Margin) * Math.Sin(angle_rad)));
 			}
 			return points;
-		}
+		}*/
 
 		public override string ToString()
 		{
-			return $"[{Radius},{RingIndex}]";
+			return $"({A},{B})";
 		}
 
 		

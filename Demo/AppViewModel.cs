@@ -150,7 +150,7 @@ namespace Demo
 		{
 			foreach (HexViewModel hex in HexMap)
 			{
-				hex.Content = hex.Coordinate.Index;
+				hex.Content = null;//.Coordinate.Index;
 			}
 		}
 
@@ -162,7 +162,7 @@ namespace Demo
 				if (SelectedItem == null) hex.Content = null;
 				else
 				{
-					hex.Content= HexMap.GetAngle(hex.Coordinate);
+					hex.Content = null;// HexMap.GetAngle(hex.Coordinate);
 				}
 			}
 		}
@@ -174,7 +174,7 @@ namespace Demo
 				if (SelectedItem == null) hex.Content = null;
 				else
 				{
-					hex.Content = HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate);
+					hex.Content = null;//HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate);
 				}
 			}
 		}
@@ -187,11 +187,11 @@ namespace Demo
 			}
 			if (SelectedItem == null) return;
 			HexMap[SelectedItem.Coordinate].Content = SelectedItem.Coordinate;
-			foreach(HexCoordinate coordinate in SelectedItem.Coordinate.GetNeighbours())
+			/*foreach(HexCoordinate coordinate in SelectedItem.Coordinate.GetNeighbours())
 			{
 				if (coordinate.Index >= HexMap.Count) continue;
 				HexMap[coordinate].Content = coordinate;
-			}
+			}*/
 		}
 		protected void OnUpdateHexContentWithDistancesOld()
 		{
@@ -203,7 +203,7 @@ namespace Demo
 				else
 				{
 					//result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate) + " / " + HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
-					result =  HexMap.GetDistanceOld(SelectedItem.Coordinate, hex.Coordinate);
+					result = null;// HexMap.GetDistanceOld(SelectedItem.Coordinate, hex.Coordinate);
 					//if (result == -1) hex.Content = null;
 					hex.Content = result;
 				}
@@ -213,7 +213,7 @@ namespace Demo
 		{
 			object result;
 
-			foreach (HexViewModel hex in HexMap)
+			/*foreach (HexViewModel hex in HexMap)
 			{
 				if (SelectedItem == null) hex.Content = null;
 				else
@@ -221,12 +221,12 @@ namespace Demo
 					result = $"{HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate)}\r\n{HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate)}";
 					hex.Content = result;
 				}
-			}
+			}*/
 		}
 
 		protected void OnUpdateHexContentWithJumpTransform()
 		{
-			foreach (HexViewModel hex in HexMap)
+			/*foreach (HexViewModel hex in HexMap)
 			{
 				hex.Content = null;
 			}
@@ -236,12 +236,12 @@ namespace Demo
 			{
 				if (coordinate.Index >= HexMap.Count) continue;
 				HexMap[coordinate].Content = coordinate;
-			}
+			}*/
 		}
 
 		protected void OnUpdateHexContentWithDrawLine()
 		{
-			foreach (HexViewModel hex in HexMap)
+			/*foreach (HexViewModel hex in HexMap)
 			{
 				hex.Content = null;
 			}
@@ -251,7 +251,7 @@ namespace Demo
 			{
 				if (coordinate.Index >= HexMap.Count) continue;
 				HexMap[coordinate].Content = coordinate;
-			}
+			}*/
 		}
 
 		protected void OnClearHexContent()

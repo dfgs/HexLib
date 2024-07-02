@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="HexCoordinate.cs" />
     <Compile Include="HexMap.cs" />
+    <Compile Include="IHexCoordinate.cs" />
     <Compile Include="IHexMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

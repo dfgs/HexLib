@@ -12,254 +12,86 @@ namespace HexLibTest
 	{
 
 		[TestMethod]
-		public void ShouldNotCreateCoordinateWithNegativeRadius()
+		public void ShouldCreateCoordinate()
 		{
-			Assert.ThrowsException<ArgumentException>(() => { new HexCoordinate(-1, 0); });
-			Assert.ThrowsException<ArgumentException>(() => { new HexCoordinate(-3, 0); });
+			HexCoordinate c;
+
+			c = new HexCoordinate();
+			Assert.AreEqual(0, c.A);
+			Assert.AreEqual(0, c.B);
+
+			c = new HexCoordinate(1,2);
+			Assert.AreEqual(1, c.A);
+			Assert.AreEqual(2, c.B);
+
+
 		}
 
 		[TestMethod]
 		public void ShouldCompareEquality()
 		{
-			Assert.AreEqual(true, new HexCoordinate(0, 0).Equals(new HexCoordinate(0, 5)));
-			Assert.AreEqual(true, new HexCoordinate(1, 0).Equals(new HexCoordinate(1, 6)));
-			Assert.AreEqual(true, new HexCoordinate(1, 5).Equals(new HexCoordinate(1, -1)));
-			Assert.AreEqual(false, new HexCoordinate(1, 0).Equals(new HexCoordinate(2, 0)));
-		}
-
-
-		[TestMethod]
-		public void ShouldModuloRingIndex()
-		{
-			// radius = 0
-			for (int t = -10; t < 10; t++) Assert.AreEqual(0,new HexCoordinate(0,t).RingIndex);
-
-			// radius = 1
-			for (int t = 0; t < 6; t++) Assert.AreEqual(t, new HexCoordinate(1, t).RingIndex);
-			for (int t = 6; t < 12; t++) Assert.AreEqual(t - 6, new HexCoordinate(1, t).RingIndex);
-			Assert.AreEqual(5, new HexCoordinate(1, -1).RingIndex);
-			Assert.AreEqual(4, new HexCoordinate(1, -2).RingIndex);
-			Assert.AreEqual(3, new HexCoordinate(1, -3).RingIndex);
-			Assert.AreEqual(2, new HexCoordinate(1, -4).RingIndex);
-			Assert.AreEqual(1, new HexCoordinate(1, -5).RingIndex);
-			Assert.AreEqual(0, new HexCoordinate(1, -6).RingIndex);
-
-			// radius = 2
-			for (int t = 0; t < 12; t++) Assert.AreEqual(t, new HexCoordinate(2, t).RingIndex);
-			for (int t = 12; t < 24; t++) Assert.AreEqual(t - 12, new HexCoordinate(2, t).RingIndex);
-			Assert.AreEqual(11, new HexCoordinate(2, -1).RingIndex);
-			Assert.AreEqual(10, new HexCoordinate(2, -2).RingIndex);
-			Assert.AreEqual(9, new HexCoordinate(2, -3).RingIndex);
-			Assert.AreEqual(8, new HexCoordinate(2, -4).RingIndex);
-			Assert.AreEqual(7, new HexCoordinate(2, -5).RingIndex);
+			Assert.IsTrue(new HexCoordinate(0, 0).Equals(new HexCoordinate(0, 0)));
+			Assert.IsTrue(new HexCoordinate(1, 0).Equals(new HexCoordinate(1, 0)));
+			Assert.IsTrue(new HexCoordinate(1, 5).Equals(new HexCoordinate(1, 5)));
+			Assert.IsFalse(new HexCoordinate(1, 0).Equals(new HexCoordinate(2, 0)));
+			Assert.IsFalse(new HexCoordinate(0, 1).Equals(new HexCoordinate(0, 2)));
 		}
 
 		[TestMethod]
-		public void ShouldHaveCorrectIndex()
+		public void ShouldCompareHashCode()
 		{
-			// radius = 0
-			for (int t = -10; t < 10; t++) Assert.AreEqual(0, new HexCoordinate(0, t).Index);
+			Assert.AreEqual(new HexCoordinate(0, 0).GetHashCode(), new HexCoordinate(0, 0).GetHashCode());
+			Assert.AreEqual(new HexCoordinate(1, 0).GetHashCode(), new HexCoordinate(1, 0).GetHashCode());
+			Assert.AreEqual(new HexCoordinate(0, 1).GetHashCode(), new HexCoordinate(0, 1).GetHashCode());
 
-			Assert.AreEqual(1, new HexCoordinate(1, 0).Index);
-			Assert.AreEqual(2, new HexCoordinate(1, 1).Index);
-			Assert.AreEqual(3, new HexCoordinate(1, 2).Index);
-			Assert.AreEqual(4, new HexCoordinate(1, 3).Index);
-			Assert.AreEqual(5, new HexCoordinate(1, 4).Index);
-			Assert.AreEqual(6, new HexCoordinate(1, 5).Index);
-			Assert.AreEqual(1, new HexCoordinate(1, 6).Index);
-
-
-			Assert.AreEqual(6, new HexCoordinate(1, -1).Index);
-			Assert.AreEqual(5, new HexCoordinate(1, -2).Index);
-			Assert.AreEqual(4, new HexCoordinate(1, -3).Index);
-			Assert.AreEqual(3, new HexCoordinate(1, -4).Index);
-			Assert.AreEqual(2, new HexCoordinate(1, -5).Index);
-			Assert.AreEqual(1, new HexCoordinate(1, -6).Index);
-
-			Assert.AreEqual(7, new HexCoordinate(2, 0).Index);
-			Assert.AreEqual(8, new HexCoordinate(2, 1).Index);
-			Assert.AreEqual(9, new HexCoordinate(2, 2).Index);
-			Assert.AreEqual(10, new HexCoordinate(2, 3).Index);
-			Assert.AreEqual(11, new HexCoordinate(2, 4).Index);
-			Assert.AreEqual(12, new HexCoordinate(2, 5).Index);
-			Assert.AreEqual(13, new HexCoordinate(2, 6).Index);
-			Assert.AreEqual(14, new HexCoordinate(2, 7).Index);
-			Assert.AreEqual(15, new HexCoordinate(2, 8).Index);
-			Assert.AreEqual(16, new HexCoordinate(2, 9).Index);
-			Assert.AreEqual(17, new HexCoordinate(2, 10).Index);
-			Assert.AreEqual(18, new HexCoordinate(2, 11).Index);
-			Assert.AreEqual(7, new HexCoordinate(2, 12).Index);
-
-			Assert.AreEqual(19, new HexCoordinate(3, 0).Index);
-
-
+			Assert.AreNotEqual(new HexCoordinate(0, 0).GetHashCode(), new HexCoordinate(1, 1).GetHashCode());
+			Assert.AreNotEqual(new HexCoordinate(1, 0).GetHashCode(), new HexCoordinate(0, 1).GetHashCode());
+			Assert.AreNotEqual(new HexCoordinate(0, -10).GetHashCode(), new HexCoordinate(0, -9).GetHashCode());
 		}
 
-
 		[TestMethod]
-		public void ShouldHaveCorrectDirectionIndex()
+		public void ShouldReturnType()
 		{
-			HexCoordinate coord;
+			HexCoordinate c;
 
-			for (int t = 0; t < 6; t++)
-			{
-				coord = new HexCoordinate(1, t);
-				Assert.AreEqual(t, coord.DirectionIndex);
-			}
+			c = new HexCoordinate();
+			Assert.AreEqual(0, c.Type);
 
-			coord = new HexCoordinate(0, 5); Assert.AreEqual(0, coord.DirectionIndex);
+			c = new HexCoordinate(1, 2);
+			Assert.AreEqual(1, c.Type);
 
-			coord = new HexCoordinate(2, 0); Assert.AreEqual(0, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 1); Assert.AreEqual(0, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 2); Assert.AreEqual(1, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 3); Assert.AreEqual(1, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 4); Assert.AreEqual(2, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 5); Assert.AreEqual(2, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 6); Assert.AreEqual(3, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 7); Assert.AreEqual(3, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 8); Assert.AreEqual(4, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 9); Assert.AreEqual(4, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 10); Assert.AreEqual(5, coord.DirectionIndex);
-			coord = new HexCoordinate(2, 11); Assert.AreEqual(5, coord.DirectionIndex);
+			c = new HexCoordinate(3, 3);
+			Assert.AreEqual(0, c.Type);
 
-			coord = new HexCoordinate(2, -1); Assert.AreEqual(5, coord.DirectionIndex);
-			coord = new HexCoordinate(2, -2); Assert.AreEqual(5, coord.DirectionIndex);
-			coord = new HexCoordinate(2, -3); Assert.AreEqual(4, coord.DirectionIndex);
-			coord = new HexCoordinate(2, -4); Assert.AreEqual(4, coord.DirectionIndex);
+			c = new HexCoordinate(3, 2);
+			Assert.AreEqual(1, c.Type);
 
 		}
 
 		[TestMethod]
-		public void ShouldHaveCorrectIsAxisAligned()
+		public void ShouldReturnNeighbors()
 		{
-			Assert.AreEqual(true, new HexCoordinate(0, 4).IsAxisAligned);
-			for (int t = 0; t < 6; t++)
-			{
-				Assert.AreEqual(true, new HexCoordinate(1, t).IsAxisAligned);
-			}
+			HexCoordinate c;
+			IHexCoordinate[] neighbors;
 
-			Assert.AreEqual(true, new HexCoordinate(2, 0).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 1).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(2, 2).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 3).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(2, 4).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 5).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(2, 6).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 7).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(2, 8).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 9).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(2, 10).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(2, 11).IsAxisAligned);
+			c = new HexCoordinate();
+			neighbors = c.GetNeighbors().ToArray();
+			Assert.AreEqual(3, neighbors.Length);
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(-1, 0)));
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(1, 0)));
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(0, 1)));
 
-			Assert.AreEqual(true, new HexCoordinate(3, 3).IsAxisAligned);
-			Assert.AreEqual(true, new HexCoordinate(3, 6).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(3, 5).IsAxisAligned);
-			Assert.AreEqual(false, new HexCoordinate(3, 7).IsAxisAligned);
+			c = new HexCoordinate(1,1);
+			neighbors = c.GetNeighbors().ToArray();
+			Assert.AreEqual(3, neighbors.Length);
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(0, 1)));
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(2, 1)));
+			Assert.IsTrue(neighbors.Contains(new HexCoordinate(1, 2)));
+
+
 		}
 
 
-		[TestMethod]
-		public void ShouldRotateTransform()
-		{
-			HexCoordinate coord;
-
-			coord = new HexCoordinate(2, 0).RotateTransform(1); Assert.AreEqual(1, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).RotateTransform(2); Assert.AreEqual(2, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).RotateTransform(3); Assert.AreEqual(3, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).RotateTransform(12); Assert.AreEqual(0, coord.RingIndex);
-			coord = new HexCoordinate(2, 0).RotateTransform(-1); Assert.AreEqual(11, coord.RingIndex);
-			coord = new HexCoordinate(2, 11).RotateTransform(1); Assert.AreEqual(0, coord.RingIndex);
-
-		}
-
-		[TestMethod]
-		public void ShouldJumpUpTransform()
-		{
-			HexCoordinate[] coords;
-
-
-			coords = new HexCoordinate(0, 0).JumpUpTransform().ToArray();
-			Assert.AreEqual(6, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 0)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 1)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 2)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 3)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 4)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 5)));
-
-			coords = new HexCoordinate(2, 9).JumpUpTransform().ToArray();
-			Assert.AreEqual(2, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(3, 13)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(3, 14)));
-
-			coords = new HexCoordinate(3, 12).JumpUpTransform().ToArray();
-			Assert.AreEqual(3, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 15)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 16)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(4, 17)));
-	
-		}
-		[TestMethod]
-		public void ShouldJumpDownTransform()
-		{
-			HexCoordinate[] coords;
-
-
-			coords = new HexCoordinate(0, 0).JumpDownTransform().ToArray();
-			Assert.AreEqual(0, coords.Length);
-
-			coords = new HexCoordinate(1, 4).JumpDownTransform().ToArray();
-			Assert.AreEqual(1, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(0, 0)));
-
-			coords = new HexCoordinate(2, 9).JumpDownTransform().ToArray();
-			Assert.AreEqual(2, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 4)));
-			Assert.IsTrue(coords.Contains(new HexCoordinate(1, 5)));
-
-			coords = new HexCoordinate(3, 12).JumpDownTransform().ToArray();
-			Assert.AreEqual(1, coords.Length);
-			Assert.IsTrue(coords.Contains(new HexCoordinate(2, 8)));
-		}
-
-
-		[TestMethod]
-		public void ShouldReturnNeighbours()
-		{
-			HexCoordinate[] ng;
-
-			// Radius = 0
-			ng = new HexCoordinate(0, 0).GetNeighbours().ToArray();
-			Assert.AreEqual(6, ng.Length);
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 0)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 1)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 2)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 3)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 5)));
-
-			// Axis Aligned cell
-			ng = new HexCoordinate(2, 8).GetNeighbours().ToArray();
-			Assert.AreEqual(6, ng.Length);
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 7)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 9)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 12)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 11)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 13)));//*/
-
-
-			// Not aligned cell
-			ng = new HexCoordinate(2, 9).GetNeighbours().ToArray();
-			Assert.AreEqual(6, ng.Length);
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 8)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(2, 10)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 4)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(1, 5)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 13)));
-			Assert.AreEqual(true, ng.Contains(new HexCoordinate(3, 14)));//*/
-
-		}
 
 
 

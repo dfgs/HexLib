@@ -45,7 +45,7 @@ namespace Demo
 			foreach (UIElement element in Children)
 			{
 				coordinate = GetCoordinate(element);
-				if (coordinate.Radius > maxRadius) maxRadius = coordinate.Radius;
+				//if (coordinate.Radius > maxRadius) maxRadius = coordinate.Radius;
 				element.Measure(itemSize);
 			}
 
@@ -68,7 +68,7 @@ namespace Demo
 			foreach (UIElement element in Children)
 			{
 				coordinate = GetCoordinate(element);
-				position = coordinate.ToScreenCoordinate(HexRadius);
+				position = new Point();// coordinate.ToScreenCoordinate(HexRadius);
 				position.Offset(dx, dy);
 				itemRect = new Rect(position, itemSize);
 				element.Arrange(itemRect);
