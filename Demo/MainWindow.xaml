@@ -13,11 +13,11 @@
 		<DataTemplate DataType="{x:Type hexLib:HexCoordinate}">
 			<StackPanel>
 				<StackPanel Orientation="Horizontal" >
-					<TextBlock Text="{Binding Radius}"/>
+					<TextBlock Text="{Binding A}"/>
 					<TextBlock Text=","/>
-					<TextBlock Text="{Binding RingIndex}"/>
+					<TextBlock Text="{Binding B}"/>
 				</StackPanel>
-				<TextBlock Text="{Binding DirectionIndex}" Foreground="LightGray" HorizontalAlignment="Center"/>
+				<TextBlock Text="{Binding DirectionIndex,FallbackValue=NA}" Foreground="LightGray" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</DataTemplate>
 		<RoutedCommand x:Key="setPivotCommand"/>

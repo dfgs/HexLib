@@ -47,8 +47,12 @@ namespace Demo
 
 		public HexViewModel(HexCoordinate Coordinate,double HexRadius)
 		{
+
 			this.Coordinate = Coordinate;
-			this.Points = new PointCollection(6);// Coordinate.GetHexCorners(new Point(HexRadius,HexRadius), HexRadius);
+			this.Points = HexMapPanel.GetHexCorners(HexRadius,1);
+
+
+
 		}
 
 

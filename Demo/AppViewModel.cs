@@ -52,16 +52,17 @@ namespace Demo
 		}
 
 
-
 		public AppViewModel()
 		{
 			HexViewModel item;
 			HexCoordinate c;
+			uint w = 5;
+			uint h = 5;
 
-			HexMap = new HexMap<HexViewModel>(5,5);
-			for(int A=0;A<5;A++)
+			HexMap = new HexMap<HexViewModel>(w,h);
+			for(int A=0;A<w;A++)
 			{
-				for(int B=0;B<5;B++)
+				for(int B=0;B<h;B++)
 				{
 					c = new HexCoordinate(A, B);
 					item = new HexViewModel(c,HexRadius) ;

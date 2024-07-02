@@ -25,6 +25,5 @@ namespace HexLib
 
 		IEnumerable<IHexCoordinate> GetNeighbors();
 
-		IScreenCoordinate ToScreenCoordinate(float Radius);
 	}
 }
