@@ -9,19 +9,22 @@ namespace HexLib
 {
 	public interface IHexMap
 	{
-		int Radius
+		uint Width
 		{
 			get;
 		}
-
-		int Count
+		uint Height
+		{
+			get;
+		}
+		uint Count
 		{
 			get;
 		}
 
 	}
 
-	public interface IHexMap<T>:IEnumerable<T>,IHexMap
+	public interface IHexMap<T>: IHexMap,IEnumerable<T>
 	{
 		T this[HexCoordinate Coordinate]
 		{

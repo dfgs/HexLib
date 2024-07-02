@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace HexLib
 {
@@ -52,6 +51,10 @@ namespace HexLib
 			yield return new HexCoordinate(A + 1, B);
 			if (Type == 1) yield return new HexCoordinate(A, B - 1);
 			else yield return new HexCoordinate(A, B + 1);
+		}
+		public IScreenCoordinate ToScreenCoordinate(float Radius)
+		{
+			return new ScreenCoordinate();
 		}
 
 

@@ -9,43 +9,28 @@ namespace HexLibTest
 	public class HexMapUnitTest
 	{
 		[TestMethod]
-		public void ShouldFailToCreateMapWithNegativeRadius()
+		public void ShouldFailToCreateMapWithNullWidth()
 		{
-			Assert.ThrowsException<ArgumentException>(() => { new HexMap<string>(-1); });
+			Assert.ThrowsException<ArgumentOutOfRangeException>(() => { new HexMap<string>(0, 10); });
+		}
+		[TestMethod]
+		public void ShouldFailToCreateMapWithNullHeight()
+		{
+			Assert.ThrowsException<ArgumentOutOfRangeException>(() => { new HexMap<string>(10, 0); });
 		}
 
 		[TestMethod]
-		public void ShouldSuccessToCreateMapWithPositiveRadius()
+		public void ShouldSuccessToCreateMapWithPositiveSize()
 		{
 			IHexMap map;
 
-			map = new HexMap<string>(0);
-			Assert.AreEqual(0, map.Radius);
-			Assert.AreEqual(1, map.Count);
+			map = new HexMap<string>(9,10);
+			Assert.AreEqual(90u, map.Count);
 
-			map = new HexMap<string>(1);
-			Assert.AreEqual(1, map.Radius);
-			Assert.AreEqual(7, map.Count);
-
-			map = new HexMap<string>(2);
-			Assert.AreEqual(2, map.Radius);
-			Assert.AreEqual(19, map.Count);
-
-			map = new HexMap<string>(3);
-			Assert.AreEqual(3, map.Radius);
-			Assert.AreEqual(37, map.Count);
+	
 		}
 
-		[TestMethod]
-		public void ShouldReturnCorrectPerimeter()
-		{
-			Assert.ThrowsException<ArgumentException>(() => { HexMap.GetPerimeter(-1); });
-			Assert.AreEqual(1, HexMap.GetPerimeter(0));
-			Assert.AreEqual(6, HexMap.GetPerimeter(1));
-			Assert.AreEqual(12, HexMap.GetPerimeter(2));
-			Assert.AreEqual(18, HexMap.GetPerimeter(3));
-		}
-
+	
 		/*[TestMethod]
 		public void ShouldReturnCorrectMapSize()
 		{
@@ -61,15 +46,10 @@ namespace HexLibTest
 		{
 			HexMap<int> map;
 
-			map = new HexMap<int>(1);
-			Assert.AreEqual(1, map.Radius);
-			Assert.AreEqual(7, map.Count);
-			Assert.AreEqual(map.Count, map.ToArray().Length);
+			map = new HexMap<int>(9,10);
+			Assert.AreEqual(90u, map.Count);
+			Assert.AreEqual(map.Count, (uint)map.ToArray().Length);
 
-			map = new HexMap<int>(2);
-			Assert.AreEqual(2, map.Radius);
-			Assert.AreEqual(19, map.Count);
-			Assert.AreEqual(map.Count, map.ToArray().Length);
 		}
 
 		[TestMethod]
@@ -78,23 +58,22 @@ namespace HexLibTest
 			HexMap<HexCoordinate> map;
 			HexCoordinate coordinate;
 
-			map = new HexMap<HexCoordinate>(5);
-			for(int r=0;r<=5;r++)
+			map = new HexMap<HexCoordinate>(9,10);
+			for(int A=0;A<9;A++)
 			{
-				for(int i=0;i<HexMap.GetMapSize(r);i++)
+				for(int B=0;B<10;B++)
 				{
-					coordinate = new HexCoordinate(r, i);
+					coordinate = new HexCoordinate(A, B);
 					map[coordinate] = coordinate;
 				}
 			}
 
-			for (int r = 0; r <= 5; r++)
+			for (int A = 0; A < 9; A++)
 			{
-				for (int i = 0; i < HexMap.GetMapSize(r); i++)
+				for (int B = 0; B < 10; B++)
 				{
-					coordinate = new HexCoordinate(r, i);
+					coordinate = new HexCoordinate(A, B);
 					Assert.AreEqual(coordinate, map[coordinate]);
-					//Assert.AreEqual(coordinate, map[coordinate.Index]);
 				}
 			}
 

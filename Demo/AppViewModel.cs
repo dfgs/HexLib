@@ -56,14 +56,16 @@ namespace Demo
 		public AppViewModel()
 		{
 			HexViewModel item;
+			HexCoordinate c;
 
-			HexMap = new HexMap<HexViewModel>(5);
-			for(int r=0;r<=5;r++)
+			HexMap = new HexMap<HexViewModel>(5,5);
+			for(int A=0;A<5;A++)
 			{
-				for(int i=0;i<HexLib.HexMap.GetPerimeter(r);i++)
+				for(int B=0;B<5;B++)
 				{
-					item = new HexViewModel(new HexCoordinate(r, i),HexRadius) ;
-					if ((r & 1) != 0) item.Background = "WhiteSmoke";
+					c = new HexCoordinate(A, B);
+					item = new HexViewModel(c,HexRadius) ;
+					if (c.Type== 0) item.Background = "WhiteSmoke";
 					else item.Background = "White";
 					HexMap[item.Coordinate] = item;
 					

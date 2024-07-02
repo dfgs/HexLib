@@ -1,13 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexLib", "HexLib\HexLib.csproj", "{337755AB-0EA2-44EE-B1BE-D7FF38E48A9E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexLib", "HexLib\HexLib.csproj", "{337755AB-0EA2-44EE-B1BE-D7FF38E48A9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexLibTest", "HexLibTest\HexLibTest.csproj", "{92912369-1D85-41CC-8CC6-D36EADBFECD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexLibTest", "HexLibTest\HexLibTest.csproj", "{92912369-1D85-41CC-8CC6-D36EADBFECD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{165D76D9-DA85-44AF-95E8-AEE1425565FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{165D76D9-DA85-44AF-95E8-AEE1425565FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

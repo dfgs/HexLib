@@ -14,10 +14,10 @@ namespace Demo
 		public static readonly DependencyProperty CoordinateProperty = DependencyProperty.RegisterAttached("Coordinate", typeof(HexCoordinate), typeof(HexMapPanel), new FrameworkPropertyMetadata(default(HexCoordinate), FrameworkPropertyMetadataOptions.AffectsParentArrange));
 
 
-		public static readonly DependencyProperty HexRadiusProperty = DependencyProperty.Register("HexRadius", typeof(double), typeof(HexMapPanel), new FrameworkPropertyMetadata(16.0d,FrameworkPropertyMetadataOptions.AffectsMeasure|FrameworkPropertyMetadataOptions.AffectsArrange));
-		public double HexRadius
+		public static readonly DependencyProperty HexRadiusProperty = DependencyProperty.Register("HexRadius", typeof(float), typeof(HexMapPanel), new FrameworkPropertyMetadata(16.0d,FrameworkPropertyMetadataOptions.AffectsMeasure|FrameworkPropertyMetadataOptions.AffectsArrange));
+		public float HexRadius
 		{
-			get { return (double)GetValue(HexRadiusProperty); }
+			get { return (float)GetValue(HexRadiusProperty); }
 			set { SetValue(HexRadiusProperty, value); }
 		}
 
@@ -56,6 +56,7 @@ namespace Demo
 		protected override Size ArrangeOverride(Size finalSize)
 		{
 			HexCoordinate coordinate;
+			IScreenCoordinate screenCoordinate;
 			Size itemSize;
 			Rect itemRect;
 			Point position;
@@ -68,7 +69,8 @@ namespace Demo
 			foreach (UIElement element in Children)
 			{
 				coordinate = GetCoordinate(element);
-				position = new Point();// coordinate.ToScreenCoordinate(HexRadius);
+				screenCoordinate = coordinate.ToScreenCoordinate(HexRadius);
+				position = new Point(screenCoordinate.X, screenCoordinate.Y);
 				position.Offset(dx, dy);
 				itemRect = new Rect(position, itemSize);
 				element.Arrange(itemRect);

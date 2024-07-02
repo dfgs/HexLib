@@ -1,36 +1,42 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace HexLib
 {
-	public class HexMap
+	public class HexMap:IHexMap
 	{
-
-
-		protected HexMap()
+		public required uint Width
 		{
-			
+			get;
+			init;
+		}
+		public required uint Height
+		{
+			get;
+			init;
 		}
 
-		
-		public static int GetPerimeter(int Radius)
+		public  uint Count
 		{
-			if (Radius < 0) throw (new ArgumentException("Radius"));
-			if (Radius == 0) return 1;
-			return 6 * Radius;
-		}
-		public static int GetMapSize(int Radius)
-		{
-			if (Radius < 0) throw (new ArgumentException("Radius"));
-			return Radius * (Radius + 1) / 2 * 6 + 1;
+			get;
+			private set;
 		}
 
+		[SetsRequiredMembers]
+		protected HexMap(uint Width,uint Height)
+		{
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Width, nameof(Width));
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Height, nameof(Height));
+
+			this.Width = Width;this.Height = Height;
+			this.Count = Width * Height;
+		}
 
 		public int GetDistance(HexCoordinate CoordinateA, HexCoordinate CoordinateB)
 		{
@@ -49,11 +55,11 @@ namespace HexLib
 		{
 			get
 			{
-				return items[0];
+				return items[Coordinate.B*Width+Coordinate.A];
 			}
 			set
 			{
-				items[0] = value;
+				items[Coordinate.B * Width + Coordinate.A] = value;
 			}
 		}
 		public T this[int Index]
@@ -68,67 +74,11 @@ namespace HexLib
 			}
 		}
 
-		public int Radius
+		[SetsRequiredMembers]
+		public HexMap(uint Width,uint Height):base(Width,Height)
 		{
-			get;
-			private set;
-		}
-
-		public int Count
-		{
-			get;
-			private set;
-		}
-
-		public HexMap(int Radius)
-		{
-			/*if (Radius < 0) throw (new ArgumentException("Radius"));
-			this.Radius = Radius;
-			Count = HexMap.GetMapSize(Radius);
 			items = new T[Count];
 
-			distances = new int[Count, Count];
-			for(int x=0;x<Count;x++)
-			{
-				for (int y = 0; y < Count; y++)
-				{
-					distances[x, y] = int.MaxValue;
-				}
-			}
-
-			for (int r = 0; r <= Radius; r++)
-			{
-				for (int i = 0; i < GetPerimeter(r); i++)
-				{
-					HexCoordinate coordinate = new HexCoordinate(r, i);
-					distances[coordinate.Index, coordinate.Index] = 0;
-					distances[0, coordinate.Index] = r;
-					distances[coordinate.Index,0] = r;
-				}
-			}
-
-			if (Radius>0) for (int r=0;r<=Radius;r++)
-			{
-				for (int i = 0; i < GetPerimeter(r); i++)
-				{
-					FillDistanceToOld(new HexCoordinate(r, i), new HexCoordinate(r, i), 0);
-				}
-				
-			}*/
-
-			/*string s = "";
-			for (int x = 0; x < Count; x++)
-			{
-				for (int y = 0; y < Count; y++)
-				{
-					int d = distances[y, x];
-					s += d;
-					if (d < 10) s +=  "  "; else s += " ";
-				}
-				s += "\r\n";
-			}
-
-			s = "";*/
 		}
 		
 		/*public IEnumerable<HexCoordinate> GetNeighbours(HexCoordinate Coordinate)
