@@ -190,11 +190,11 @@ namespace Demo
 			}
 			if (SelectedItem == null) return;
 			HexMap[SelectedItem.Coordinate].Content = SelectedItem.Coordinate;
-			/*foreach(HexCoordinate coordinate in SelectedItem.Coordinate.GetNeighbours())
+			foreach(HexCoordinate coordinate in SelectedItem.Coordinate.GetNeighbors())
 			{
-				if (coordinate.Index >= HexMap.Count) continue;
+				if (HexMap.IsOutOfBound(coordinate)) continue;
 				HexMap[coordinate].Content = coordinate;
-			}*/
+			}
 		}
 		protected void OnUpdateHexContentWithDistancesOld()
 		{

@@ -43,6 +43,17 @@ namespace HexLib
 			
 			return -1;
 		}
+		public uint GetIndex(IHexCoordinate Coordinate)
+		{
+			return (uint)(Coordinate.B * Width + Coordinate.A);
+		}
+		public bool IsOutOfBound(IHexCoordinate Coordinate)
+		{
+			uint index;
+
+			index = GetIndex(Coordinate);
+			return index >= Count;
+		}
 
 	}
 
@@ -51,7 +62,7 @@ namespace HexLib
 	public class HexMap<T> : HexMap,IHexMap<T>
 	{
 		private T[] items;
-		public T this[HexCoordinate Coordinate]
+		public T this[IHexCoordinate Coordinate]
 		{
 			get
 			{
@@ -62,7 +73,7 @@ namespace HexLib
 				items[Coordinate.B * Width + Coordinate.A] = value;
 			}
 		}
-		public T this[int Index]
+		public T this[uint Index]
 		{
 			get
 			{
