@@ -1,5 +1,6 @@
 ﻿using HexLib;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -34,6 +35,13 @@ namespace Demo
 			set { SetValue(HexMapProperty, value); }
 		}
 
+		public static readonly DependencyProperty EdgesProperty = DependencyProperty.Register("Edges", typeof(List<EdgeViewModel>), typeof(AppViewModel));
+		public List<EdgeViewModel> Edges
+		{
+			get { return (List<EdgeViewModel>)GetValue(EdgesProperty); }
+			set { SetValue(EdgesProperty, value); }
+		}
+
 
 		public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register("SelectedItem", typeof(HexViewModel), typeof(AppViewModel), new PropertyMetadata(null, SelectedItemPropertyChanged));
 		public HexViewModel SelectedItem
@@ -56,9 +64,10 @@ namespace Demo
 		{
 			HexViewModel item;
 			HexCoordinate c;
-			uint w = 5;
-			uint h = 5;
+			uint w = 10;
+			uint h = 10;
 
+			Edges = new List<EdgeViewModel>();
 			HexMap = new HexMap<HexViewModel>(w,h);
 			for(int A=0;A<w;A++)
 			{
@@ -69,7 +78,13 @@ namespace Demo
 					if (c.Type== 0) item.Background = "WhiteSmoke";
 					else item.Background = "White";
 					HexMap[item.Coordinate] = item;
-					
+
+
+					foreach (IHexCoordinate neighborCoordinate in c.GetNeighbors())
+					{
+						this.Edges.Add(new EdgeViewModel(c, neighborCoordinate,HexRadius));
+					}
+
 				}
 			}
 			OnDemoModeChanged();

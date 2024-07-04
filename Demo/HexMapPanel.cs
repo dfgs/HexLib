@@ -61,17 +61,26 @@ namespace Demo
 
 
 			if (HexRadius == 0) return new Point(0, 0);
-			if ((Coordinate.B & 1) != 0)
+			if ((Coordinate.A & 1) != 0)
 			{
-				x = Coordinate.A * horDist + horDist / 2.0;
-				y = Coordinate.B * vertDist ;
+				x = Coordinate.A * horDist /3.0f;
+				y = Coordinate.B * 2 * HexRadius;
 			}
 			else
 			{
-				x = Coordinate.A * horDist ;
-				y = Coordinate.B * vertDist;
+				if ((Coordinate.B & 1) != 0)
+				{
+					x = Coordinate.A * horDist / 3.0f;
+					y = Coordinate.B * 2 * HexRadius-5;
+				}
+				else
+				{
+					x = Coordinate.A * horDist / 3.0f;
+					y = Coordinate.B * 2 * HexRadius+5;
+
+				}
 			}
-			return new Point(x,y);
+			return new Point(x+100,y+100);
 		}
 
 		protected override Size MeasureOverride(Size availableSize)
@@ -95,8 +104,8 @@ namespace Demo
 				element.Measure(itemSize);
 			}
 
-			
-			return new Size((maxA+1.5)* horDist, maxB*vertDist+HexRadius*2) ;
+
+			return  new Size((maxA+1.5)* horDist, maxB*vertDist+HexRadius*2) ;
 		}
 
 		protected override Size ArrangeOverride(Size finalSize)
@@ -112,10 +121,11 @@ namespace Demo
 			{
 				coordinate = GetCoordinate(element);
 				position = ToPoint(coordinate, HexRadius);
+				position.Offset(-itemSize.Width / 2, -itemSize.Height / 2);
 				itemRect = new Rect(position, itemSize);
 				element.Arrange(itemRect);
 			}
-			return DesiredSize;
+			return finalSize;
 		}
 
 

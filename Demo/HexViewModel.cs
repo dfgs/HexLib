@@ -29,13 +29,7 @@ namespace Demo
 		}
 
 
-		public static readonly DependencyProperty PointsProperty = DependencyProperty.Register("Points", typeof(PointCollection), typeof(HexViewModel));
-		public PointCollection Points
-		{
-			get { return (PointCollection)GetValue(PointsProperty); }
-			set { SetValue(PointsProperty, value); }
-		}
-
+		
 
 		public static readonly DependencyProperty ContentProperty = DependencyProperty.Register("Content", typeof(object), typeof(HexViewModel));
 		public object Content
@@ -49,7 +43,7 @@ namespace Demo
 		{
 
 			this.Coordinate = Coordinate;
-			this.Points = HexMapPanel.GetHexCorners(HexRadius,1);
+			
 
 
 
