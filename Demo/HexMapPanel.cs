@@ -1,6 +1,7 @@
 ﻿using HexLib;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,30 +55,38 @@ namespace Demo
 		public static Point ToPoint(IHexCoordinate Coordinate, double HexRadius)
 		{
 			double x, y;
-			double vertDist, horDist;
+			double height, width,vertSpacing,horSpacing;
 
-			vertDist = 2*HexRadius * 3.0f / 4.0f;
-			horDist = HexRadius * Math.Sqrt(3);
+			height = 2 * HexRadius ;
+			width = HexRadius * Math.Sqrt(3);
 
+			vertSpacing = height / 4.0d;
+			horSpacing = width/2.0d;
 
 			if (HexRadius == 0) return new Point(0, 0);
-			if ((Coordinate.A & 1) != 0)
+
+			x = Coordinate.A * horSpacing;
+			
+			if ((Coordinate.B & 1) == 0)
 			{
-				x = Coordinate.A * horDist /3.0f;
-				y = Coordinate.B * 2 * HexRadius;
+				if ((Coordinate.A & 1) == 0)
+				{
+					y = Coordinate.B * 3 * vertSpacing ;
+				}
+				else 
+				{
+					y = Coordinate.B * 3 * vertSpacing - vertSpacing;
+				}
 			}
 			else
 			{
-				if ((Coordinate.B & 1) != 0)
+				if ((Coordinate.A & 1) == 0)
 				{
-					x = Coordinate.A * horDist / 3.0f;
-					y = Coordinate.B * 2 * HexRadius-5;
+					y = Coordinate.B * 3 * vertSpacing - vertSpacing;
 				}
 				else
 				{
-					x = Coordinate.A * horDist / 3.0f;
-					y = Coordinate.B * 2 * HexRadius+5;
-
+					y = Coordinate.B * 3 * vertSpacing ;
 				}
 			}
 			return new Point(x+100,y+100);
