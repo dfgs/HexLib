@@ -66,30 +66,9 @@ namespace Demo
 			if (HexRadius == 0) return new Point(0, 0);
 
 			x = Coordinate.A * horSpacing;
-			
-			if ((Coordinate.B & 1) == 0)
-			{
-				if ((Coordinate.A & 1) == 0)
-				{
-					y = Coordinate.B * 3 * vertSpacing ;
-				}
-				else 
-				{
-					y = Coordinate.B * 3 * vertSpacing - vertSpacing;
-				}
-			}
-			else
-			{
-				if ((Coordinate.A & 1) == 0)
-				{
-					y = Coordinate.B * 3 * vertSpacing - vertSpacing;
-				}
-				else
-				{
-					y = Coordinate.B * 3 * vertSpacing ;
-				}
-			}
-			return new Point(x+100,y+100);
+			y = (Coordinate.B * 3 - Coordinate.Type )* vertSpacing ;
+
+			return new Point(x+ HexRadius, y+ HexRadius);
 		}
 
 		protected override Size MeasureOverride(Size availableSize)

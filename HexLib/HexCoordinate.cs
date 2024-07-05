@@ -22,7 +22,7 @@ namespace HexLib
 		}
 		public int Type
 		{
-			get => (A + B) % 2;
+			get => Math.Abs(A + B) % 2;
 		}
 
 		public HexCoordinate(int A,int B)

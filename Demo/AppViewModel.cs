@@ -12,7 +12,7 @@ namespace Demo
 		public static DemoModes[] DemoModes = Enum.GetValues(typeof(DemoModes)).Cast<DemoModes>().ToArray();
 
 
-		public static readonly double HexRadius=32;
+		public static readonly double HexRadius=48;
 
 
 		public static readonly DependencyProperty DemoModeProperty = DependencyProperty.Register("DemoMode", typeof(DemoModes), typeof(AppViewModel),new PropertyMetadata(Demo.DemoModes.Coordinates,DemoModePropertyChanged));

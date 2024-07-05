@@ -66,6 +66,8 @@ namespace HexLibTest
 			c = new HexCoordinate(3, 2);
 			Assert.AreEqual(1, c.Type);
 
+			c = new HexCoordinate(-1, 0);
+			Assert.AreEqual(1, c.Type);
 		}
 
 		[TestMethod]
