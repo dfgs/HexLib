@@ -73,13 +73,13 @@ namespace HexLib
 		public uint GetDistanceTo(IHexCoordinate Other)
 		{
 
-			var qA = this.A - (this.B + (this.B & 1)) / 2;
-			var rA = this.B;
-			var sA = -qA - rA;
+			int qA = this.A - (this.B + (this.B & 1)) / 2;
+			int rA = this.B;
+			int sA = -qA - rA;
 
-			var qB = Other.A - (Other.B + (Other.B & 1)) / 2;
-			var rB = Other.B;
-			var sB = -qB - rB;
+			int qB = Other.A - (Other.B + (Other.B & 1)) / 2;
+			int rB = Other.B;
+			int sB = -qB - rB;
 
 			return (uint)(Math.Abs(qA - qB) + Math.Abs(rA - rB) + Math.Abs(sA - sB)) / 2;
 			
