@@ -48,15 +48,46 @@ namespace HexLib
 
 		public IEnumerable<IHexCoordinate> GetNeighbors()
 		{
-			yield return new HexCoordinate(A - 1, B);
-			yield return new HexCoordinate(A + 1, B);
-			if (Type == 1) yield return new HexCoordinate(A, B - 1);
-			else yield return new HexCoordinate(A, B + 1);
+			if ((B&1)==0)
+			{
+				yield return new HexCoordinate(A - 1, B);
+				yield return new HexCoordinate(A + 1, B);
+				yield return new HexCoordinate(A , B - 1);
+				yield return new HexCoordinate(A + 1, B - 1);
+				yield return new HexCoordinate(A , B + 1);
+				yield return new HexCoordinate(A + 1, B + 1);
+			}
+			else
+			{
+				yield return new HexCoordinate(A - 1, B);
+				yield return new HexCoordinate(A + 1, B);
+				yield return new HexCoordinate(A - 1, B - 1);
+				yield return new HexCoordinate(A , B - 1);
+				yield return new HexCoordinate(A - 1, B + 1);
+				yield return new HexCoordinate(A , B + 1);
+
+			}
+
 		}
-		
+
+		public uint GetDistanceTo(IHexCoordinate Other)
+		{
+
+			var qA = this.A - (this.B + (this.B & 1)) / 2;
+			var rA = this.B;
+			var sA = -qA - rA;
+
+			var qB = Other.A - (Other.B + (Other.B & 1)) / 2;
+			var rB = Other.B;
+			var sB = -qB - rB;
+
+			return (uint)(Math.Abs(qA - qB) + Math.Abs(rA - rB) + Math.Abs(sA - sB)) / 2;
+			
+
+		}
 
 
-	
+
 
 
 

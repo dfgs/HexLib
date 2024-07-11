@@ -36,21 +36,7 @@ namespace Demo
 			Component.SetValue(CoordinateProperty, Value);
 		}
 
-		public static PointCollection GetHexCorners(double HexRadius, double Margin = 0)
-		{
-			double angle_deg;
-			double angle_rad;
-			PointCollection points = new PointCollection();
-
-			for (int corner = 0; corner < 6; corner++)
-			{
-				angle_deg = 60 * corner + 30;
-				angle_rad = Math.PI * angle_deg / 180;
-
-				points.Add(new Point(HexRadius * Math.Sqrt(3) / 2f + (HexRadius - Margin) * Math.Cos(angle_rad), HexRadius + (HexRadius - Margin) * (float)Math.Sin(angle_rad)));
-			}
-			return points;
-		}
+	
 
 		public static Point ToPoint(IHexCoordinate Coordinate, double HexRadius)
 		{
@@ -60,13 +46,14 @@ namespace Demo
 			height = 2 * HexRadius ;
 			width = HexRadius * Math.Sqrt(3);
 
-			vertSpacing = height / 4.0d;
-			horSpacing = width/2.0d;
+			vertSpacing = height*3/4;
+			horSpacing = width;
 
 			if (HexRadius == 0) return new Point(0, 0);
 
-			x = Coordinate.A * horSpacing;
-			y = (Coordinate.B * 3 - Coordinate.Type )* vertSpacing ;
+			
+			x = (Coordinate.A - (Coordinate.B & 1)*0.5d) * horSpacing;
+			y = (Coordinate.B ) * vertSpacing ;
 
 			return new Point(x+ HexRadius, y+ HexRadius);
 		}

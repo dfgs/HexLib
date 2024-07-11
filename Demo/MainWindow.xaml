@@ -11,13 +11,13 @@
 	<Window.Resources>
 		<local:AppViewModel x:Key="appViewModel"/>
 		<DataTemplate DataType="{x:Type hexLib:HexCoordinate}">
-			<StackPanel>
-				<StackPanel Orientation="Horizontal" >
+			<StackPanel VerticalAlignment="Center">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
 					<TextBlock Text="{Binding A}"/>
 					<TextBlock Text=","/>
 					<TextBlock Text="{Binding B}"/>
 				</StackPanel>
-				<TextBlock Text="{Binding DirectionIndex,FallbackValue=NA}" Foreground="LightGray" HorizontalAlignment="Center"/>
+				<TextBlock Text="{Binding Type,FallbackValue=NA}" Foreground="LightGray" HorizontalAlignment="Center"/>
 			</StackPanel>
 		</DataTemplate>
 		<RoutedCommand x:Key="setPivotCommand"/>
@@ -45,21 +45,10 @@
 		<StatusBar DockPanel.Dock="Bottom">
 			<TextBlock/>
 		</StatusBar>
-		<Grid Margin="10">
-			<ItemsControl ItemsSource="{Binding Edges}" Background="White">
-				<ItemsControl.ItemsPanel>
-					<ItemsPanelTemplate>
-						<Canvas ClipToBounds="True"/>
-					</ItemsPanelTemplate>
-				</ItemsControl.ItemsPanel>
-				<ItemsControl.ItemTemplate>
-					<DataTemplate>
-						<Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}" Stroke="LightGray" StrokeDashArray="1 4"/>
-					</DataTemplate>
-				</ItemsControl.ItemTemplate>
-			</ItemsControl>
+		<Grid >
+			
 
-			<ListBox ItemsSource="{Binding HexMap}" Background="Transparent" SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" >
+			<ListBox ItemsSource="{Binding HexMap}"  SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" >
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="{x:Type ListBoxItem}">
 						<Setter Property="ToolTip" Value="{Binding Content}"/>
@@ -70,8 +59,8 @@
 							<Setter.Value>
 								<ControlTemplate TargetType="{x:Type ListBoxItem}">
 									<Grid>
+										<Polygon Points="{local:HexagonMarkup Radius=32,Margin=0,Horizontal=False}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}"/>
 										<ContentPresenter Content="{Binding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-										<Ellipse Width="5" Height="5" Stroke="{TemplateBinding BorderBrush}" Fill="Blue"/>
 									</Grid>
 								</ControlTemplate>
 							</Setter.Value>

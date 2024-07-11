@@ -12,7 +12,7 @@ namespace Demo
 		public static DemoModes[] DemoModes = Enum.GetValues(typeof(DemoModes)).Cast<DemoModes>().ToArray();
 
 
-		public static readonly double HexRadius=48;
+		public static readonly double HexRadius=32;
 
 
 		public static readonly DependencyProperty DemoModeProperty = DependencyProperty.Register("DemoMode", typeof(DemoModes), typeof(AppViewModel),new PropertyMetadata(Demo.DemoModes.Coordinates,DemoModePropertyChanged));
@@ -128,9 +128,6 @@ namespace Demo
 				case Demo.DemoModes.AngleBetweenCells:
 					OnUpdateHexContentWithAngleBetweenCells();
 					break;
-				case Demo.DemoModes.DistanceOld:
-					OnUpdateHexContentWithDistancesOld();
-					break;
 				case Demo.DemoModes.Distance:
 					OnUpdateHexContentWithDistances();
 					break;
@@ -211,7 +208,8 @@ namespace Demo
 				HexMap[coordinate].Content = coordinate;
 			}
 		}
-		protected void OnUpdateHexContentWithDistancesOld()
+		
+		protected void OnUpdateHexContentWithDistances()
 		{
 			object result;
 
@@ -220,26 +218,10 @@ namespace Demo
 				if (SelectedItem == null) hex.Content = null;
 				else
 				{
-					//result = SelectedItem.Coordinate.GetTaxiDriverDistanceTo(hex.Coordinate) + " / " + HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate);
-					result = null;// HexMap.GetDistanceOld(SelectedItem.Coordinate, hex.Coordinate);
-					//if (result == -1) hex.Content = null;
+					result = $"{SelectedItem.Coordinate.GetDistanceTo(hex.Coordinate)}";
 					hex.Content = result;
 				}
 			}
-		}
-		protected void OnUpdateHexContentWithDistances()
-		{
-			object result;
-
-			/*foreach (HexViewModel hex in HexMap)
-			{
-				if (SelectedItem == null) hex.Content = null;
-				else
-				{
-					result = $"{HexMap.GetDistance(SelectedItem.Coordinate, hex.Coordinate)}\r\n{HexMap.GetAngle(SelectedItem.Coordinate, hex.Coordinate)}";
-					hex.Content = result;
-				}
-			}*/
 		}
 
 		protected void OnUpdateHexContentWithJumpTransform()

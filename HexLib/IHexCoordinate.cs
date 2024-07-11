@@ -25,5 +25,7 @@ namespace HexLib
 
 		IEnumerable<IHexCoordinate> GetNeighbors();
 
+		uint GetDistanceTo(IHexCoordinate Other);
+
 	}
 }
